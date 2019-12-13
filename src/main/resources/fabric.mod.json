@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
-  "version": "${version}",
+  "id": "cpu",
+  "version": "0.1.0",
 
-  "name": "Example Mod",
+  "name": "Cubic Processing Units",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "RedstoneParadox"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "MIT",
+  "icon": "assets/cpu/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleModKt::init"
+      "redstoneparadox.cpu.CubicProcessingUnitsKt::init"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "cpu.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.7.1",
