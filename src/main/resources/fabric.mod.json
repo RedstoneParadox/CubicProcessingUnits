@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "redstoneparadox.cpu.CubicProcessingUnitsKt::init"
+    ],
+    "client": [
+      "redstoneparadox.cpu.client.CubicProcessingUnitsClientKt::init"
     ]
   },
   "mixins": [
