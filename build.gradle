@@ -23,6 +23,9 @@ repositories {
         url = "https://dl.bintray.com/redstoneparadox/mods"
     }
     maven {
+        url = "https://dl.bintray.com/redstoneparadox/"
+    }
+    maven {
         name = 'CottonMC'
         url = 'http://server.bbkr.space:8081/artifactory/libs-release'
     }
@@ -56,10 +59,10 @@ dependencies {
     }
     include "redstoneparadox:paradox-config:${project.pconfig_version}"
 
-   modApi("io.github.cottonmc:LibGui:${project.libgui_version}") {
-       exclude group: 'net.fabricmc.fabric-api'
-   }
-   include "io.github.cottonmc:LibGui:${project.libgui_version}"
+    modApi("io.github.redstoneparadox:OakTree:${project.oak_tree_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+    }
+    include "io.github.redstoneparadox:OakTree:${project.oak_tree_version}"
 }
 
 processResources {
