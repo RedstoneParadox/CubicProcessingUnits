@@ -21,4 +21,9 @@ class CpuContainer(val world: World, val pos: BlockPos, syncId: Int) : Container
         if (be is CpuBlockEntity) return be.load()
         return  ""
     }
+
+    fun run() {
+        val be = world.getBlockEntity(pos)
+        if (be is CpuBlockEntity) be.run()
+    }
 }

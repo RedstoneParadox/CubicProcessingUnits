@@ -1,6 +1,5 @@
 package io.github.redstoneparadox.cpu.api;
 
-import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

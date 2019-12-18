@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "redstoneparadox.cpu.CubicProcessingUnitsKt::init"
+      "io.github.redstoneparadox.cpu.CubicProcessingUnitsKt::init"
     ],
     "client": [
       "io.github.redstoneparadox.cpu.client.CubicProcessingUnitsClientKt::init"

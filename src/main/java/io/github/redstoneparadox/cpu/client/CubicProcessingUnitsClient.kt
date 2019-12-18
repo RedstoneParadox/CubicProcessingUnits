@@ -2,16 +2,13 @@ package io.github.redstoneparadox.cpu.client
 
 
 import io.github.redstoneparadox.oaktree.client.gui.ScreenBuilder
-import io.github.redstoneparadox.oaktree.client.gui.control.ButtonControl
-import io.github.redstoneparadox.oaktree.client.gui.control.Control
-import io.github.redstoneparadox.oaktree.client.gui.control.SplitBoxControl
-import io.github.redstoneparadox.oaktree.client.gui.control.TextEditControl
 import io.github.redstoneparadox.oaktree.client.gui.style.ColorStyleBox
 import io.github.redstoneparadox.oaktree.client.gui.util.ControlAnchor
 import io.github.redstoneparadox.oaktree.client.gui.util.RGBAColor
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 import io.github.redstoneparadox.cpu.id
 import io.github.redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.oaktree.client.gui.control.*
 
 fun init() {
     ScreenProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id()) { syncID, id, player, buf ->
@@ -43,11 +40,15 @@ fun cpuGUI(): Control<*> {
             textEdit
         )
         .secondChild(
-            SplitBoxControl()
+            GridControl()
+                .setRows(1)
+                .setColumns(3)
                 .expand(true)
-                .firstChild(
+                .setCellSize(65f, 20f)
+                .anchor(ControlAnchor.CENTER)
+                .setCell(0,
                     ButtonControl()
-                        .size(80f, 15f)
+                        .size(60f, 15f)
                         .anchor(ControlAnchor.CENTER)
                         .defaultStyle(ColorStyleBox(RGBAColor.red()))
                         .heldStyle(ColorStyleBox(RGBAColor(0.7f, 0f, 0f)))
@@ -57,19 +58,32 @@ fun cpuGUI(): Control<*> {
                                 (container.get() as CpuContainer).save(textEdit.text)
                             }
                         }
-                )
-                .secondChild(
+                    )
+                .setCell(1,
                     ButtonControl()
-                        .size(80f, 15f)
+                        .size(60f, 15f)
                         .anchor(ControlAnchor.CENTER)
-                        .defaultStyle(ColorStyleBox(RGBAColor.blue()))
-                        .heldStyle(ColorStyleBox(RGBAColor(0f, 0f, 0.7f)))
+                        .defaultStyle(ColorStyleBox(RGBAColor.green()))
+                        .heldStyle(ColorStyleBox(RGBAColor(0f, 0.7f, 0.0f)))
                         .onClick { gui, control ->
                             val container = gui.screenContainer
                             if (container.isPresent && container.get() is CpuContainer) {
                                 textEdit.text = (container.get() as CpuContainer).load()
                             }
                         }
+                    )
+                .setCell(2,
+                    ButtonControl()
+                    .size(60f, 15f)
+                    .anchor(ControlAnchor.CENTER)
+                    .defaultStyle(ColorStyleBox(RGBAColor.blue()))
+                    .heldStyle(ColorStyleBox(RGBAColor(0f, 0f, 0.7f)))
+                    .onClick { gui, control ->
+                        val container = gui.screenContainer
+                        if (container.isPresent && container.get() is CpuContainer) {
+                            (container.get() as CpuContainer).run()
+                        }
+                    }
                 )
         )
 }
