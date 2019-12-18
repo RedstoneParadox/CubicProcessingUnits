@@ -1,4 +1,4 @@
-package redstoneparadox.cpu.block
+package io.github.redstoneparadox.cpu.block
 
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
@@ -15,8 +15,8 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
-import redstoneparadox.cpu.block.entity.CpuBlockEntity
-import redstoneparadox.cpu.id
+import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
+import io.github.redstoneparadox.cpu.id
 
 class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()) {
     override fun createBlockEntity(view: BlockView?): BlockEntity? {

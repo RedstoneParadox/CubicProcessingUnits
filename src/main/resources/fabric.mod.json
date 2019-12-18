@@ -22,7 +22,7 @@
       "redstoneparadox.cpu.CubicProcessingUnitsKt::init"
     ],
     "client": [
-      "redstoneparadox.cpu.client.CubicProcessingUnitsClientKt::init"
+      "io.github.redstoneparadox.cpu.client.CubicProcessingUnitsClientKt::init"
     ]
   },
   "mixins": [

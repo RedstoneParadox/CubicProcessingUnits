@@ -1,4 +1,4 @@
-package redstoneparadox.cpu.client
+package io.github.redstoneparadox.cpu.client
 
 
 import io.github.redstoneparadox.oaktree.client.gui.ScreenBuilder
@@ -10,13 +10,19 @@ import io.github.redstoneparadox.oaktree.client.gui.style.ColorStyleBox
 import io.github.redstoneparadox.oaktree.client.gui.util.ControlAnchor
 import io.github.redstoneparadox.oaktree.client.gui.util.RGBAColor
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
-import redstoneparadox.cpu.id
-import redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.cpu.id
+import io.github.redstoneparadox.cpu.misc.CpuContainer
 
 fun init() {
     ScreenProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id()) { syncID, id, player, buf ->
         ScreenBuilder(cpuGUI())
-            .container(CpuContainer(player.world, buf.readBlockPos(), syncID))
+            .container(
+                CpuContainer(
+                    player.world,
+                    buf.readBlockPos(),
+                    syncID
+                )
+            )
             .buildContainerScreen<CpuContainer>()
     }
 }

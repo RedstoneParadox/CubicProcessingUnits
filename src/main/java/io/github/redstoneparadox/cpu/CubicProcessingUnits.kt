@@ -1,11 +1,11 @@
-package redstoneparadox.cpu
+package io.github.redstoneparadox.cpu
 
 import net.fabricmc.fabric.api.container.ContainerFactory
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.util.Identifier
-import redstoneparadox.cpu.block.CpuBlocks
-import redstoneparadox.cpu.block.entity.CpuBlockEntityTypes
-import redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.cpu.block.CpuBlocks
+import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntityTypes
+import io.github.redstoneparadox.cpu.misc.CpuContainer
 
 @SuppressWarnings("unused")
 fun init() {
