@@ -12,7 +12,10 @@ fun init() {
     CpuBlockEntityTypes.register()
     CpuBlocks.register()
 
-    ContainerProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id(), ContainerFactory { syncID, id, player, buf ->  CpuContainer(syncID)})
+    ContainerProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id(), ContainerFactory { syncID, id, player, buf ->
+
+        CpuContainer(player.world, buf.readBlockPos(), syncID)
+    })
 }
 
 fun String.id(): Identifier {
