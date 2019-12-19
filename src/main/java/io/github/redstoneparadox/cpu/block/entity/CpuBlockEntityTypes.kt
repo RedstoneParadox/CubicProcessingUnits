@@ -10,8 +10,6 @@ object CpuBlockEntityTypes {
     val CPU: BlockEntityType<CpuBlockEntity> = BlockEntityType.Builder.create(Supplier { CpuBlockEntity() }, CpuBlocks.CPU).build(null)
 
     fun register() {
-        Registry.register(Registry.BLOCK_ENTITY, "cpu:cpu",
-            CPU
-        )
+        Registry.register(Registry.BLOCK_ENTITY, "cpu:cpu", CPU)
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier
 import io.github.redstoneparadox.cpu.block.CpuBlocks
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntityTypes
 import io.github.redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.cpu.networking.Packets
 
 @SuppressWarnings("unused")
 fun init() {
@@ -13,9 +14,9 @@ fun init() {
     CpuBlocks.register()
 
     ContainerProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id(), ContainerFactory { syncID, id, player, buf ->
-
         CpuContainer(player.world, buf.readBlockPos(), syncID)
     })
+    Packets.registerPackets()
 }
 
 fun String.id(): Identifier {
