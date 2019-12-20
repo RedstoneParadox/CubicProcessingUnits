@@ -1,5 +1,7 @@
 package io.github.redstoneparadox.cpu.block
 
+import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
+import io.github.redstoneparadox.cpu.api.PeripheralHandle
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.entity.BlockEntity
@@ -18,6 +20,18 @@ import net.minecraft.block.*
 class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()) {
     override fun createBlockEntity(view: BlockView): BlockEntity {
         return CpuBlockEntity()
+    }
+
+    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, neighborPos: BlockPos, moved: Boolean) {
+        if (!world.isClient) {
+            val be = world.getBlockEntity(pos)
+            val neighborBe = world.getBlockEntity(neighborPos)
+            if (be is CpuBlockEntity && neighborBe is PeripheralBlockEntity) {
+                val handle = PeripheralHandle(be)
+                val peripheral = neighborBe.getPeripheral(handle)
+                be.connect(handle, peripheral, neighborBe.defaultName)
+            }
+        }
     }
 
     override fun getRenderType(state: BlockState): BlockRenderType {

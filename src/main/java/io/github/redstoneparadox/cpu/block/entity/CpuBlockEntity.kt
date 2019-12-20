@@ -23,13 +23,21 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
     private var cores: Int = 1
 
     private val peripherals: MutableMap<PeripheralHandle, Peripheral<*>> = mutableMapOf()
+    private val handles: MutableMap<String, PeripheralHandle> = mutableMapOf()
 
     init {
         engines.push(createNewEngine())
     }
 
-    fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>) {
+    fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>, name: String) {
         peripherals[handle] = peripheral
+        var trueName = name
+        var count = 1
+        while (handles.containsKey(trueName)) {
+            count += 1
+            trueName = "$name$count"
+        }
+        handles[trueName] = handle
     }
 
     fun disconnect(handle: PeripheralHandle) {
