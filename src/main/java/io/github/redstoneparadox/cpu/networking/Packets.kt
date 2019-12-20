@@ -22,10 +22,10 @@ object Packets {
     }
 
     private fun saveScript(syncId: Int, script: String) {
-        listeners[syncId]?.save(script)
+        listeners[syncId]?.saveRemote(script)
     }
 
     private fun runScript(syncId: Int) {
-        listeners[syncId]?.run()
+        listeners[syncId]?.runRemote()
     }
 }

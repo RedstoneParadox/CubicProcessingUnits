@@ -55,7 +55,7 @@ fun cpuGUI(): Control<*> {
                         .onClick { gui, control ->
                             val container = gui.screenContainer
                             if (container.isPresent && container.get() is CpuContainer) {
-                                (container.get() as CpuContainer).saveRemote(textEdit.text)
+                                (container.get() as CpuContainer).save(textEdit.text)
                             }
                         }
                     )
@@ -81,7 +81,7 @@ fun cpuGUI(): Control<*> {
                     .onClick { gui, control ->
                         val container = gui.screenContainer
                         if (container.isPresent && container.get() is CpuContainer) {
-                            (container.get() as CpuContainer).runRemote()
+                            (container.get() as CpuContainer).run()
                         }
                     }
                 )

@@ -1,17 +1,16 @@
 package io.github.redstoneparadox.cpu.block.entity
 
 import io.github.redstoneparadox.cpu.api.Peripheral
+import io.github.redstoneparadox.cpu.api.PeripheralHandle
 import io.github.redstoneparadox.cpu.misc.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
 import java.util.*
-import java.util.function.Consumer
 import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
@@ -23,20 +22,18 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
     private val jobs: MutableList<Job> = mutableListOf()
     private var cores: Int = 1
 
-    private val peripherals: MutableMap<Any, Peripheral<*>> = mutableMapOf()
+    private val peripherals: MutableMap<PeripheralHandle, Peripheral<*>> = mutableMapOf()
 
     init {
         engines.push(createNewEngine())
     }
 
-    fun connect(peripheral: Peripheral<*>): Any {
-        val key = Any()
-        peripherals[key] = peripheral
-        return key
+    fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>) {
+        peripherals[handle] = peripheral
     }
 
-    fun disconnect(key: Any) {
-        if (peripherals.containsKey(key)) peripherals.remove(key)
+    fun disconnect(handle: PeripheralHandle) {
+        if (peripherals.containsKey(handle)) peripherals.remove(handle)
     }
 
     fun run() {

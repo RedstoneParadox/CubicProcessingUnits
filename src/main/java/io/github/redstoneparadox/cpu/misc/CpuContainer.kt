@@ -18,18 +18,13 @@ class CpuContainer(private val world: World, private val pos: BlockPos, syncId: 
         return true
     }
 
-    fun saveRemote(script: String) {
+    fun save(script: String) {
         if (world.isClient) ClientPackets.saveScriptPacket(syncId, script)
         val be = world.getBlockEntity(pos)
         if (be is CpuBlockEntity) be.save(script)
     }
 
-    fun runRemote() {
-        if (world.isClient) ClientPackets.runScriptPacket(syncId)
-    }
-
-    // 8, 4, -7
-    fun save(script: String) {
+    fun saveRemote(script: String) {
         if  (world.isClient) return
         world.server?.execute {
             val be = world.getBlockEntity(pos)
@@ -44,6 +39,10 @@ class CpuContainer(private val world: World, private val pos: BlockPos, syncId: 
     }
 
     fun run() {
+        if (world.isClient) ClientPackets.runScriptPacket(syncId)
+    }
+
+    fun runRemote() {
         if  (world.isClient) return
         world.server?.execute {
             val be = world.getBlockEntity(pos)
