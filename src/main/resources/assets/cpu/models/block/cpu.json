@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "cpu:block/cpu_side",
+    "front": "cpu:block/cpu_front",
+    "side": "cpu:block/cpu_side"
+  }
+}
