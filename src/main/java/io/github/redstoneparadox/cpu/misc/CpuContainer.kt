@@ -7,6 +7,7 @@ import net.minecraft.world.World
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
 import io.github.redstoneparadox.cpu.client.networking.ClientPackets
 import io.github.redstoneparadox.cpu.networking.Packets
+import net.minecraft.server.world.ServerWorld
 
 class CpuContainer(private val world: World, private val pos: BlockPos, syncId: Int) : Container(null, syncId) {
     init {
@@ -19,16 +20,21 @@ class CpuContainer(private val world: World, private val pos: BlockPos, syncId: 
 
     fun saveRemote(script: String) {
         if (world.isClient) ClientPackets.saveScriptPacket(syncId, script)
-        save(script)
+        val be = world.getBlockEntity(pos)
+        if (be is CpuBlockEntity) be.save(script)
     }
 
     fun runRemote() {
         if (world.isClient) ClientPackets.runScriptPacket(syncId)
     }
 
+    // 8, 4, -7
     fun save(script: String) {
-        val be = world.getBlockEntity(pos)
-        if (be is CpuBlockEntity) be.save(script)
+        if  (world.isClient) return
+        world.server?.execute {
+            val be = world.getBlockEntity(pos)
+            if (be is CpuBlockEntity) be.save(script)
+        }
     }
 
     fun load(): String {
@@ -38,8 +44,10 @@ class CpuContainer(private val world: World, private val pos: BlockPos, syncId: 
     }
 
     fun run() {
-        if (world.isClient) return
-        val be = world.getBlockEntity(pos)
-        if (be is CpuBlockEntity) be.run()
+        if  (world.isClient) return
+        world.server?.execute {
+            val be = world.getBlockEntity(pos)
+            if (be is CpuBlockEntity) be.run()
+        }
     }
 }

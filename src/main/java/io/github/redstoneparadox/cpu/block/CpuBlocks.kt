@@ -8,8 +8,6 @@ object CpuBlocks {
     val CPU: Block = CpuBlock()
 
     fun register() {
-        Registry.register(Registry.BLOCK, "cpu:cpu",
-            CPU
-        )
+        Registry.register(Registry.BLOCK, "cpu:cpu", CPU)
     }
 }

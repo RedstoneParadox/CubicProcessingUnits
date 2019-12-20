@@ -39,9 +39,9 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
         if (peripherals.containsKey(key)) peripherals.remove(key)
     }
 
-    fun run() = runBlocking {
+    fun run() {
         val world = world
-        if (world == null || world.isClient) return@runBlocking
+        if (world == null || world.isClient) return
 
         val job = GlobalScope.launch {
             var engine: ScriptEngine? = null
@@ -57,7 +57,7 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
             returnEngine(engine)
         }
         jobs.add(job)
-        return@runBlocking
+        return
     }
 
     @Synchronized

@@ -19,7 +19,7 @@ import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
 import io.github.redstoneparadox.cpu.id
 
 class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()) {
-    override fun createBlockEntity(view: BlockView?): BlockEntity? {
+    override fun createBlockEntity(view: BlockView): BlockEntity {
         return CpuBlockEntity()
     }
 
