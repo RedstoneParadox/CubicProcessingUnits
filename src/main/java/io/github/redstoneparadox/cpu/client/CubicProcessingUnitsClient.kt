@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.cpu.client
 
 
+import io.github.redstoneparadox.cpu.client.networking.ClientPackets
 import io.github.redstoneparadox.oaktree.client.gui.ScreenBuilder
 import io.github.redstoneparadox.oaktree.client.gui.style.ColorStyleBox
 import io.github.redstoneparadox.oaktree.client.gui.util.ControlAnchor
@@ -22,17 +23,18 @@ fun init() {
             )
             .buildContainerScreen<CpuContainer>()
     }
+    ClientPackets.registerPackets()
 }
 
 
 fun cpuGUI(): Control<*> {
     val textEdit = TextEditControl()
-        .size(180f, 160f)
+        .size(280f, 160f)
         .anchor(ControlAnchor.CENTER)
         .maxLines(15).shadow(true)
         .defaultStyle(ColorStyleBox(RGBAColor.black(), RGBAColor(0.7f, 0.7f, 0.7f), 5f))
     return SplitBoxControl()
-        .size(200f, 200f)
+        .size(300f, 200f)
         .splitPercent(90f)
         .setVertical(true)
         .anchor(ControlAnchor.CENTER)
@@ -44,7 +46,7 @@ fun cpuGUI(): Control<*> {
                 .setRows(1)
                 .setColumns(3)
                 .expand(true)
-                .setCellSize(65f, 20f)
+                .setCellSize(100f, 20f)
                 .anchor(ControlAnchor.CENTER)
                 .setCell(0,
                     ButtonControl()

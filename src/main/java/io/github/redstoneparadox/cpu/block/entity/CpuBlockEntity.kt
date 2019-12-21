@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
 import java.util.*
+import java.util.function.Function
 import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
@@ -76,7 +77,6 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
         if (engines.size < cores) {
             val bindings = fillBindings(engine.createBindings())
             engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE)
-            println(bindings.entries)
             engines.push(engine)
         }
     }
@@ -95,7 +95,20 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
 
     @Synchronized
     private fun fillBindings(bindings: Bindings): Bindings {
+        bindings["getPeripheral"] = Function { name: String -> getPeripheral(name)}
+
         return bindings
+    }
+
+    @Synchronized
+    private fun getPeripheral(name: String): Peripheral<*>? {
+        val handle = handles[name]
+        if (handle != null) {
+            val peripheral = peripherals[handle]
+            if (peripheral != null) return peripheral
+            else handles.remove(name)
+        }
+        return null
     }
 
     fun save(script: String) {
