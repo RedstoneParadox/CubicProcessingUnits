@@ -16,7 +16,6 @@ object ClientPackets {
 
     fun registerPackets() {
         ClientSidePacketRegistry.INSTANCE.register("cpu:speaker".id()) { context, buf ->
-            println("Packet received!")
             val world = context.player.world
             val pos = buf.readBlockPos()
             val id = buf.readIdentifier()
