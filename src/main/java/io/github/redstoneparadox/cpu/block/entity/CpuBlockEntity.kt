@@ -2,6 +2,7 @@ package io.github.redstoneparadox.cpu.block.entity
 
 import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
+import io.github.redstoneparadox.cpu.block.CpuBlock
 import io.github.redstoneparadox.cpu.misc.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
@@ -10,6 +11,7 @@ import kotlinx.coroutines.launch
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
+import net.minecraft.util.math.Direction
 import java.util.*
 import java.util.function.Function
 import javax.script.Bindings
@@ -123,6 +125,9 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains("script")) script = tag.getString("script")
         super.fromTag(tag)
+        for (direction in Direction.values()) {
+            world?.let { CpuBlock.findPeripherals(it, pos, pos.offset(direction)) }
+        }
     }
 
     override fun toTag(tag: CompoundTag): CompoundTag {

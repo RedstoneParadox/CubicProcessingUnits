@@ -16,6 +16,11 @@ import net.minecraft.world.World
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
 import io.github.redstoneparadox.cpu.id
 import net.minecraft.block.*
+import net.minecraft.entity.LivingEntity
+import net.minecraft.item.ItemStack
+import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.math.Direction
+import java.util.*
 
 class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()) {
     override fun createBlockEntity(view: BlockView): BlockEntity {
@@ -23,15 +28,7 @@ class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).buil
     }
 
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, neighborPos: BlockPos, moved: Boolean) {
-        if (!world.isClient) {
-            val be = world.getBlockEntity(pos)
-            val neighborBe = world.getBlockEntity(neighborPos)
-            if (be is CpuBlockEntity && neighborBe is PeripheralBlockEntity) {
-                val handle = PeripheralHandle(be)
-                val peripheral = neighborBe.getPeripheral(handle)
-                be.connect(handle, peripheral, neighborBe.defaultName)
-            }
-        }
+        findPeripherals(world, pos, neighborPos)
     }
 
     override fun getRenderType(state: BlockState): BlockRenderType {
@@ -47,5 +44,19 @@ class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).buil
         }
 
         return ActionResult.SUCCESS
+    }
+
+    companion object {
+        internal fun findPeripherals(world: World, pos: BlockPos, neighborPos: BlockPos) {
+            if (!world.isClient) {
+                val be = world.getBlockEntity(pos)
+                val neighborBe = world.getBlockEntity(neighborPos)
+                if (be is CpuBlockEntity && neighborBe is PeripheralBlockEntity) {
+                    val handle = PeripheralHandle(be)
+                    val peripheral = neighborBe.getPeripheral(handle)
+                    be.connect(handle, peripheral, neighborBe.defaultName)
+                }
+            }
+        }
     }
 }
