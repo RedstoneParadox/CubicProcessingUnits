@@ -24,14 +24,14 @@ class SpeakerBlockEntity : PeripheralBlockEntity(CpuBlockEntityTypes.SPEAKER) {
         return "speaker"
     }
 
-    private fun playSound(id: String) {
-        (world as? ServerWorld)?.let { Packets.soundPacket(it, pos, id.id(),1.0f, 1.0f, true) }
+    private fun playSound(id: String, volume: Float, pitch: Float) {
+        (world as? ServerWorld)?.let { Packets.soundPacket(it, pos, id.id(), volume, pitch, true) }
     }
 
     class SpeakerPeripheral(wrapped: @NotNull SpeakerBlockEntity): Peripheral<SpeakerBlockEntity>(wrapped) {
         @Synchronized
-        fun playSound(id: String) {
-            wrapped?.playSound(id)
+        fun playSound(id: String, volume: Float, pitch: Float) {
+            wrapped?.playSound(id, volume, pitch)
         }
     }
 }
