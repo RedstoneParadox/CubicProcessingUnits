@@ -3,6 +3,7 @@
   "package": "io.github.redstoneparadox.cpu.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "server.world.MixinServerWorld"
   ],
   "client": [
   ],
