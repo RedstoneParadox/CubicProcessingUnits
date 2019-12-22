@@ -2,7 +2,6 @@ package io.github.redstoneparadox.cpu.block.entity
 
 import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
-import io.github.redstoneparadox.cpu.block.CpuBlock
 import io.github.redstoneparadox.cpu.misc.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
@@ -12,8 +11,8 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
-import net.minecraft.util.math.Direction
 import java.util.*
+import java.util.function.Consumer
 import java.util.function.Function
 import javax.script.Bindings
 import javax.script.ScriptContext
@@ -98,6 +97,7 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
 
     @Synchronized
     private fun fillBindings(bindings: Bindings): Bindings {
+        bindings["delay"] = Consumer { ms: Long -> Thread.sleep(ms) }
         bindings["getPeripheral"] = Function { name: String -> getPeripheral(name)}
 
         return bindings
