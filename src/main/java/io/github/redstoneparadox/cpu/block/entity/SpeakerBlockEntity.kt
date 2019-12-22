@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull
 
 class SpeakerBlockEntity : PeripheralBlockEntity(CpuBlockEntityTypes.SPEAKER) {
     var handle: PeripheralHandle? = null
+    var volume: Float = 0.0f
 
     override fun getPeripheral(handle: PeripheralHandle?): Peripheral<*> {
         this.handle = handle
@@ -24,14 +25,24 @@ class SpeakerBlockEntity : PeripheralBlockEntity(CpuBlockEntityTypes.SPEAKER) {
         return "speaker"
     }
 
-    private fun playSound(id: String, volume: Float, pitch: Float) {
+    private fun playSound(id: String, pitch: Float) {
         (world as? ServerWorld)?.let { Packets.soundPacket(it, pos, id.id(), volume, pitch, true) }
     }
 
     class SpeakerPeripheral(wrapped: @NotNull SpeakerBlockEntity): Peripheral<SpeakerBlockEntity>(wrapped) {
         @Synchronized
-        fun playSound(id: String, volume: Float, pitch: Float) {
-            wrapped?.playSound(id, volume, pitch)
+        fun playSound(id: String, pitch: Float) {
+            wrapped?.playSound(id, pitch)
+        }
+
+        @Synchronized
+        fun getVolume(): Float {
+            return wrapped?.volume ?: 0.0f
+        }
+
+        @Synchronized
+        fun setVolume(volume: Float) {
+            wrapped?.volume = volume
         }
     }
 }
