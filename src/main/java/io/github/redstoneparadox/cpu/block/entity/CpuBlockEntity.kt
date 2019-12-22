@@ -8,6 +8,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
@@ -18,7 +19,7 @@ import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
 
-class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
+class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEntityClientSerializable {
     private var script: String = ""
 
     private val engines: Stack<ScriptEngine> = Stack()
@@ -125,9 +126,6 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains("script")) script = tag.getString("script")
         super.fromTag(tag)
-        for (direction in Direction.values()) {
-            world?.let { CpuBlock.findPeripherals(it, pos, pos.offset(direction)) }
-        }
     }
 
     override fun toTag(tag: CompoundTag): CompoundTag {
@@ -139,5 +137,14 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable {
         val remaining = jobs.filter { it.isActive }
         jobs.clear()
         jobs.addAll(remaining)
+    }
+
+    override fun toClientTag(tag: CompoundTag): CompoundTag {
+        tag.putString("script", script)
+        return tag
+    }
+
+    override fun fromClientTag(tag: CompoundTag) {
+        if (tag.contains("script")) script = tag.getString("script")
     }
 }
