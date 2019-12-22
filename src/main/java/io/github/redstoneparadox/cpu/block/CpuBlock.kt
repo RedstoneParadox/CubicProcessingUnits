@@ -17,22 +17,20 @@ import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
 import io.github.redstoneparadox.cpu.id
 import net.minecraft.block.*
 import net.minecraft.entity.LivingEntity
+import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.state.StateManager
 import net.minecraft.util.math.Direction
 import java.util.*
 
-class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()) {
+class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), BlockEntityProvider {
     override fun createBlockEntity(view: BlockView): BlockEntity {
         return CpuBlockEntity()
     }
 
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, neighborPos: BlockPos, moved: Boolean) {
         findPeripherals(world, pos, neighborPos)
-    }
-
-    override fun getRenderType(state: BlockState): BlockRenderType {
-        return BlockRenderType.MODEL
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
@@ -44,6 +42,14 @@ class CpuBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).buil
         }
 
         return ActionResult.SUCCESS
+    }
+
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        builder.add(FACING)
+    }
+
+    override fun getPlacementState(ctx: ItemPlacementContext): BlockState {
+        return defaultState.with(FACING, ctx.playerFacing.opposite)
     }
 
     companion object {
