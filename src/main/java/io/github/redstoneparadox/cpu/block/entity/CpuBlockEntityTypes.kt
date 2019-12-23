@@ -9,9 +9,11 @@ object CpuBlockEntityTypes {
 
     val CPU: BlockEntityType<CpuBlockEntity> = BlockEntityType.Builder.create(Supplier { CpuBlockEntity() }, CpuBlocks.CPU).build(null)
     val SPEAKER: BlockEntityType<SpeakerBlockEntity> = BlockEntityType.Builder.create(Supplier { SpeakerBlockEntity() }, CpuBlocks.SPEAKER).build(null)
+    val MODEM: BlockEntityType<ModemBlockEntity> = BlockEntityType.Builder.create(Supplier { ModemBlockEntity() }, CpuBlocks.MODEM).build(null)
 
     fun register() {
         Registry.register(Registry.BLOCK_ENTITY, "cpu:cpu", CPU)
         Registry.register(Registry.BLOCK_ENTITY, "cpu:speaker", SPEAKER)
+        Registry.register(Registry.BLOCK_ENTITY, "cpu:modem", MODEM)
     }
 }
