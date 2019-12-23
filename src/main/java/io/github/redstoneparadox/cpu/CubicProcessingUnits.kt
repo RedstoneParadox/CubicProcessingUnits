@@ -29,6 +29,7 @@ fun init() {
         .appendItems {
             it.append(CpuItems.CPU)
             it.append(CpuItems.SPEAKER)
+            it.append(CpuItems.MODEM)
         }
         .build()
 }

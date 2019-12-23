@@ -5,5 +5,6 @@ import org.jetbrains.annotations.NotNull;
 public interface ConnectionManagerAccessor {
 
     @NotNull
-    ConnectionManager getManager();
+    ConnectionManager getConnectionManager();
+
 }

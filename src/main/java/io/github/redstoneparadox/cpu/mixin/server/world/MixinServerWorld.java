@@ -12,7 +12,7 @@ public abstract class MixinServerWorld implements ConnectionManagerAccessor {
 
     @NotNull
     @Override
-    public ConnectionManager getManager() {
+    public ConnectionManager getConnectionManager() {
         return manager;
     }
 }

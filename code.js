@@ -1,2 +1,4 @@
-var speaker = getPeripheral("speaker");
-speaker.playSound("block.note_block.chime");
+// Sender
+var modem = getPeripheral("modem");
+modem.openConnection(1);
+modem.send("block.m")
