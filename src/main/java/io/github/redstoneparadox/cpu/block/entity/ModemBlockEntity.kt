@@ -32,6 +32,7 @@ class ModemBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.MODEM) {
         if (world != null && !world!!.isClient) {
             val manager = (world as ConnectionManagerAccessor).connectionManager
             if (connection != null) manager.close(currentID)
+            connection = null;
         }
     }
 

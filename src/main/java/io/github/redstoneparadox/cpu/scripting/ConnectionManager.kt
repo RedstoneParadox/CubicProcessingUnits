@@ -20,10 +20,13 @@ class ConnectionManager {
     }
 
     fun close(id: Int) {
-        if (connections.containsKey(id)) {
-            val connection = connections[id] as Connection
+        val connection = connections[id]
+        if (connection != null) {
             connection.count -= 1
-            if (connection.count <= 0) connection.close()
+            if (connection.count <= 0) {
+                connection.close()
+                connections.remove(id)
+            }
         }
     }
 
