@@ -2,7 +2,7 @@ package io.github.redstoneparadox.cpu.block.entity
 
 import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
-import io.github.redstoneparadox.cpu.misc.SynchronizedBox
+import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job

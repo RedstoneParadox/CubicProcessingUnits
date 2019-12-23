@@ -1,4 +1,4 @@
-package io.github.redstoneparadox.cpu.misc;
+package io.github.redstoneparadox.cpu.util;
 
 @FunctionalInterface
 public interface Action {
