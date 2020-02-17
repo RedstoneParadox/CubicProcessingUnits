@@ -1,6 +1,8 @@
 package io.github.redstoneparadox.cpu.scripting
 
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.broadcast
 import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.concurrent.schedule
@@ -8,6 +10,21 @@ import kotlin.concurrent.schedule
 class ConnectionManager {
 
     private val connections: MutableMap<Int, Connection> = mutableMapOf()
+
+    private val broadcasters: MutableMap<Int, BroadcastChannel<Any>> = mutableMapOf()
+
+    fun newOpen(id: Int): NewConnection {
+        var broadcaster = broadcasters[id]
+        if (broadcaster == null) {
+            broadcaster = BroadcastChannel(255)
+            broadcasters[id] = broadcaster
+        }
+        return NewConnection(broadcaster)
+    }
+
+    fun newClose(id: Int) {
+
+    }
 
     fun open(id: Int): Connection {
         var connection = connections[id]
@@ -27,6 +44,24 @@ class ConnectionManager {
                 connection.close()
                 connections.remove(id)
             }
+        }
+    }
+
+    class NewConnection(private val sender: BroadcastChannel<Any>) {
+        private val receiver = sender.openSubscription()
+
+        fun send(any: Any) = runBlocking {
+            sender.send(any)
+        }
+
+        fun receive(maxWait: Long): Any? = runBlocking {
+            var timeout = false
+            Timer().schedule(maxWait) { timeout = true }
+            while (true) {
+                if (!receiver.isEmpty) break
+                else return@runBlocking null
+            }
+            return@runBlocking receiver.receive()
         }
     }
 
