@@ -4,8 +4,8 @@ import io.github.redstoneparadox.cpu.id
 import io.netty.buffer.Unpooled
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.network.Packet
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket
 import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket
 import net.minecraft.sound.SoundCategory
 import net.minecraft.util.Identifier
 import net.minecraft.util.PacketByteBuf

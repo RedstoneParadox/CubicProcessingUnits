@@ -12,8 +12,8 @@ object CpuBlockEntityTypes {
     val MODEM: BlockEntityType<ModemBlockEntity> = BlockEntityType.Builder.create(Supplier { ModemBlockEntity() }, CpuBlocks.MODEM).build(null)
 
     fun register() {
-        Registry.register(Registry.BLOCK_ENTITY, "cpu:cpu", CPU)
-        Registry.register(Registry.BLOCK_ENTITY, "cpu:speaker", SPEAKER)
-        Registry.register(Registry.BLOCK_ENTITY, "cpu:modem", MODEM)
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, "cpu:cpu", CPU)
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, "cpu:speaker", SPEAKER)
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, "cpu:modem", MODEM)
     }
 }
