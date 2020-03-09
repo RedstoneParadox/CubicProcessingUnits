@@ -10,10 +10,11 @@ import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 import io.github.redstoneparadox.cpu.id
 import io.github.redstoneparadox.cpu.misc.CpuContainer
 import io.github.redstoneparadox.oaktree.client.gui.control.*
+import io.github.redstoneparadox.oaktree.client.gui.style.Theme
 
 fun init() {
     ScreenProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id()) { syncID, id, player, buf ->
-        ScreenBuilder(cpuGUI())
+        ScreenBuilder(cpuControlTree())
             .container(
                 CpuContainer(
                     player.world,
@@ -21,36 +22,35 @@ fun init() {
                     syncID
                 )
             )
+            .theme(Theme.vanilla())
             .buildContainerScreen<CpuContainer>()
     }
     ClientPackets.registerPackets()
 }
 
-
-fun cpuGUI(): Control<*> {
+fun cpuControlTree(): Control<*> {
     val textEdit = TextEditControl()
         .size(280f, 160f)
         .anchor(ControlAnchor.CENTER)
         .maxLines(15).shadow(true)
-        .defaultStyle(ColorStyleBox(RGBAColor.black(), RGBAColor(0.7f, 0.7f, 0.7f), 5f))
-    return SplitBoxControl()
+        .id("text_edit")
+    return SplitPanelControl()
         .size(300f, 200f)
-        .splitPercent(90f)
-        .setVertical(true)
+        .splitSize(180f)
         .anchor(ControlAnchor.CENTER)
-        .firstChild(
+        .verticalSplit(true)
+        .id("base")
+        .child(
             textEdit
         )
-        .secondChild(
-            GridControl()
-                .setRows(1)
-                .setColumns(3)
+        .child(
+            GridPanelControl()
+                .rows(1)
+                .columns(3)
                 .expand(true)
-                .setCellSize(100f, 20f)
-                .anchor(ControlAnchor.CENTER)
-                .setCell(0,
+                .child(
                     ButtonControl()
-                        .size(60f, 15f)
+                        .size(50f, 10f)
                         .anchor(ControlAnchor.CENTER)
                         .defaultStyle(ColorStyleBox(RGBAColor.red()))
                         .heldStyle(ColorStyleBox(RGBAColor(0.7f, 0f, 0f)))
@@ -60,10 +60,10 @@ fun cpuGUI(): Control<*> {
                                 (container.get() as CpuContainer).save(textEdit.text)
                             }
                         }
-                    )
-                .setCell(1,
+                )
+                .child(
                     ButtonControl()
-                        .size(60f, 15f)
+                        .size(50f, 10f)
                         .anchor(ControlAnchor.CENTER)
                         .defaultStyle(ColorStyleBox(RGBAColor.green()))
                         .heldStyle(ColorStyleBox(RGBAColor(0f, 0.7f, 0.0f)))
@@ -73,19 +73,19 @@ fun cpuGUI(): Control<*> {
                                 textEdit.text = (container.get() as CpuContainer).load()
                             }
                         }
-                    )
-                .setCell(2,
+                )
+                .child(
                     ButtonControl()
-                    .size(60f, 15f)
-                    .anchor(ControlAnchor.CENTER)
-                    .defaultStyle(ColorStyleBox(RGBAColor.blue()))
-                    .heldStyle(ColorStyleBox(RGBAColor(0f, 0f, 0.7f)))
-                    .onClick { gui, control ->
-                        val container = gui.screenContainer
-                        if (container.isPresent && container.get() is CpuContainer) {
-                            (container.get() as CpuContainer).run()
+                        .size(50f, 10f)
+                        .anchor(ControlAnchor.CENTER)
+                        .defaultStyle(ColorStyleBox(RGBAColor.blue()))
+                        .heldStyle(ColorStyleBox(RGBAColor(0f, 0f, 0.7f)))
+                        .onClick { gui, control ->
+                            val container = gui.screenContainer
+                            if (container.isPresent && container.get() is CpuContainer) {
+                                (container.get() as CpuContainer).run()
+                            }
                         }
-                    }
                 )
         )
 }
