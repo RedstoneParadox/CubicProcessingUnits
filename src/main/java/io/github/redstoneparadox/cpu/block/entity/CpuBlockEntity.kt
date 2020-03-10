@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.cpu.block.entity
 
 import io.github.redstoneparadox.cpu.api.Peripheral
+import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
 import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
@@ -12,6 +13,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Tickable
+import net.minecraft.util.math.Direction
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
@@ -31,12 +33,23 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
     private val handles: MutableMap<String, PeripheralHandle> = mutableMapOf()
 
     private fun boot() {
-        if (world is ServerWorld) {
+        val world = world
+        if (world != null && !world.isClient) {
             engines.push(createNewEngine())
             engines.push(createNewEngine())
             engines.push(createNewEngine())
             engines.push(createNewEngine())
             engines.push(createNewEngine())
+
+            for (direction in Direction.values()) {
+                val neighborPos = pos.offset(direction)
+                val neighborBe = world.getBlockEntity(neighborPos)
+                if (neighborBe is PeripheralBlockEntity) {
+                    val handle = PeripheralHandle(this)
+                    val peripheral = neighborBe.getPeripheral(handle)
+                    connect(handle, peripheral, neighborBe.defaultName)
+                }
+            }
         }
         booted = true
     }

@@ -8,7 +8,6 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
-import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
@@ -16,13 +15,8 @@ import net.minecraft.world.World
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
 import io.github.redstoneparadox.cpu.id
 import net.minecraft.block.*
-import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemPlacementContext
-import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
-import net.minecraft.util.math.Direction
-import java.util.*
 
 class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), BlockEntityProvider {
     override fun createBlockEntity(view: BlockView): BlockEntity {
@@ -30,7 +24,7 @@ class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK
     }
 
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, neighborPos: BlockPos, moved: Boolean) {
-        findPeripherals(world, pos, neighborPos)
+        connectPeripheral(world, pos, neighborPos)
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
@@ -53,7 +47,7 @@ class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK
     }
 
     companion object {
-        internal fun findPeripherals(world: World, pos: BlockPos, neighborPos: BlockPos) {
+        internal fun connectPeripheral(world: World, pos: BlockPos, neighborPos: BlockPos) {
             if (!world.isClient) {
                 val be = world.getBlockEntity(pos)
                 val neighborBe = world.getBlockEntity(neighborPos)
