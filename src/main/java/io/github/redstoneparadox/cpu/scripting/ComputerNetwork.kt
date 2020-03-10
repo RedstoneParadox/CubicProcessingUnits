@@ -12,30 +12,30 @@ import kotlin.concurrent.schedule
 class ComputerNetwork {
     private val frequencies: MutableMap<Int, Frequency> = hashMapOf()
 
-    fun connect(frequencyID: Int): Pair<Frequency, Any>  {
+    fun connect(frequencyID: Int): Pair<Frequency, Any> {
         val handle = Any()
         if (!frequencies.containsKey(frequencyID)) {
-            frequencies[frequencyID] = Frequency(hashMapOf())
+            frequencies[frequencyID] = Frequency(SynchronizedBox(hashMapOf()))
         }
         val frequency = frequencies[frequencyID]!!
-        frequency.connections[handle] = LimitedQueue<Any>(16)
+        frequency.connections.borrow { it[handle] = LimitedQueue<Any>(16) }
 
         return Pair(frequency, handle)
     }
 
     fun disconnect(frequency: Frequency, handle: Any) {
-        frequency.connections.remove(handle)
+        frequency.connections.borrow { it.remove(handle) }
     }
 
     fun tick() {
         for (entry in frequencies) {
-            if (entry.value.connections.isEmpty()) frequencies.remove(entry.key)
+            if (entry.value.connections.map { it.isEmpty() }) frequencies.remove(entry.key)
         }
     }
 
-    class Frequency(val connections: HashMap<Any, Queue<Any>>) {
-        fun send(any: Any, handle: Any) {
-            for (entry in connections) {
+    class Frequency(val connections: SynchronizedBox<HashMap<Any, LimitedQueue<Any>>>) {
+        fun send(any: Any, handle: Any) = connections.borrow {
+            for (entry in it) {
                 if (handle != entry.key) {
                     val toSend = when (any) {
                         is Boolean, is Byte, is Short, is Int, is Long, is Float, is Double, is Char, is String -> any
@@ -43,13 +43,13 @@ class ComputerNetwork {
                         else -> throw Exception()
                     }
 
-                    entry.value.offer(toSend)
+                    entry.value.add(toSend)
                 }
             }
         }
 
         fun receive(handle: Any, wait: Long): Any? {
-            val queue = connections[handle]
+            val queue = connections.map { it[handle] }
             if (queue != null) {
                 var timedOut = false
                 Timer().schedule(wait * 1000L) { timedOut = true }

@@ -31,7 +31,13 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
     private val handles: MutableMap<String, PeripheralHandle> = mutableMapOf()
 
     private fun boot() {
-        if (world is ServerWorld) engines.push(createNewEngine())
+        if (world is ServerWorld) {
+            engines.push(createNewEngine())
+            engines.push(createNewEngine())
+            engines.push(createNewEngine())
+            engines.push(createNewEngine())
+            engines.push(createNewEngine())
+        }
         booted = true
     }
 
@@ -55,18 +61,13 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
         if (world == null || world.isClient) return
 
         val job = GlobalScope.launch {
-            var engine: ScriptEngine? = null
-            while (engine == null) {
-                engine = requestEngine()
-                println(pos)
-            }
+            val engine = createNewEngine()
 
             try {
                 engine.eval(script)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            returnEngine(engine)
         }
         jobs.add(job)
         return
@@ -87,6 +88,7 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
         }
     }
 
+    @Synchronized
     private fun createNewEngine(): ScriptEngine {
         val initialized = SynchronizedBox(false)
         val filter = { _: String -> !initialized.get()}
