@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
+import io.github.redstoneparadox.cpu.block.entity.SpeakerBlockEntity
 import io.github.redstoneparadox.cpu.id
 import net.minecraft.block.*
 import net.minecraft.item.ItemPlacementContext
@@ -25,6 +26,12 @@ class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK
 
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, neighborPos: BlockPos, moved: Boolean) {
         connectPeripheral(world, pos, neighborPos)
+    }
+
+    override fun onBlockRemoved(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
+        val be = world.getBlockEntity(pos)
+        if (be is CpuBlockEntity) be.onRemove()
+        super.onBlockRemoved(state, world, pos, newState, moved)
     }
 
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {

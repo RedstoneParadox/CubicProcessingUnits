@@ -7,6 +7,7 @@ import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
@@ -52,6 +53,10 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
             }
         }
         booted = true
+    }
+
+    fun onRemove() {
+        for (job in jobs) job.cancel()
     }
 
     fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>, name: String) {
