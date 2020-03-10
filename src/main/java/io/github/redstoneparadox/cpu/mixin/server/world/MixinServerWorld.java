@@ -1,18 +1,27 @@
 package io.github.redstoneparadox.cpu.mixin.server.world;
 
-import io.github.redstoneparadox.cpu.scripting.ConnectionManager;
-import io.github.redstoneparadox.cpu.scripting.ConnectionManagerAccessor;
+import io.github.redstoneparadox.cpu.scripting.ComputerNetwork;
+import io.github.redstoneparadox.cpu.scripting.ComputerNetworkAccessor;
 import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.BooleanSupplier;
 
 @Mixin(ServerWorld.class)
-public abstract class MixinServerWorld implements ConnectionManagerAccessor {
-    private final ConnectionManager manager = new ConnectionManager();
+public abstract class MixinServerWorld implements ComputerNetworkAccessor {
+    private final ComputerNetwork network = new ComputerNetwork();
 
-    @NotNull
     @Override
-    public ConnectionManager getConnectionManager() {
-        return manager;
+    public @NotNull ComputerNetwork getNetwork() {
+        return network;
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void tick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
+        network.tick();
     }
 }

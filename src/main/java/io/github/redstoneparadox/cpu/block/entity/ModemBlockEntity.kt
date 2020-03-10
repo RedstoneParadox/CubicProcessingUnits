@@ -3,13 +3,13 @@ package io.github.redstoneparadox.cpu.block.entity
 import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
-import io.github.redstoneparadox.cpu.scripting.ConnectionManager
-import io.github.redstoneparadox.cpu.scripting.ConnectionManagerAccessor
+import io.github.redstoneparadox.cpu.scripting.ComputerNetwork
+import io.github.redstoneparadox.cpu.scripting.ComputerNetworkAccessor
 import org.jetbrains.annotations.NotNull
 
 class ModemBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.MODEM) {
-    var connection: ConnectionManager.Connection? = null
-    var currentID: Int = 0;
+    var handle: Any? = null
+    var frequency: ComputerNetwork.Frequency? = null
 
     override fun getPeripheral(handle: PeripheralHandle): Peripheral<*> {
         return ModemPeripheral(this)
@@ -21,19 +21,30 @@ class ModemBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.MODEM) {
 
     fun open(id: Int) {
         if (world != null && !world!!.isClient) {
-            val manager = (world as ConnectionManagerAccessor).connectionManager
-            if (connection != null) manager.close(currentID)
-            connection = manager.open(id)
-            currentID = id;
+            val network = (world as ComputerNetworkAccessor).network
+            if (handle != null && frequency != null) network.disconnect(frequency!!, handle!!)
+            val pair = network.connect(id)
+            frequency = pair.first
+            handle = pair.second
         }
     }
 
     fun close() {
         if (world != null && !world!!.isClient) {
-            val manager = (world as ConnectionManagerAccessor).connectionManager
-            if (connection != null) manager.close(currentID)
-            connection = null;
+            val network = (world as ComputerNetworkAccessor).network
+            if (frequency != null && handle != null) network.disconnect(frequency!!, handle!!)
+            frequency = null
+            handle = null
         }
+    }
+
+    fun send(any: Any) {
+        if (frequency != null && handle != null) frequency!!.send(any, handle!!)
+    }
+
+    fun receive(wait: Long): Any? {
+        if (frequency != null && handle != null) return frequency!!.receive(handle!!, wait)
+        return null
     }
 
     class ModemPeripheral(wrapped: @NotNull ModemBlockEntity): Peripheral<ModemBlockEntity>(wrapped) {
@@ -50,12 +61,14 @@ class ModemBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.MODEM) {
 
         @Synchronized
         fun send(any: Any) {
-            wrapped?.connection?.send(any)
+            println("Sending a message!")
+            wrapped?.send(any)
         }
 
         @Synchronized
-        fun receive(timeout: Long): Any? {
-            return wrapped?.connection?.receive(timeout)
+        fun receive(wait: Long): Any? {
+            println("Receiving what's mine!")
+            return wrapped?.receive(wait)
         }
     }
 }

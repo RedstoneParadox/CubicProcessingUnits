@@ -11,7 +11,15 @@ class SynchronizedBox<T>(private var value: T) {
         this.value = value
     }
 
-    inline fun operate(function: T.() -> T) {
+    inline fun mutate(function: (t: T) -> T) {
         set(function(get()))
+    }
+
+    inline fun borrow(function: (t: T) -> Unit) {
+        function(get())
+    }
+
+    inline fun <U> map(function: (t: T) -> U): U {
+        return function(get())
     }
 }

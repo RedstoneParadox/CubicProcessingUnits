@@ -2,9 +2,8 @@ package io.github.redstoneparadox.cpu.scripting;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface ConnectionManagerAccessor {
+public interface ComputerNetworkAccessor {
 
     @NotNull
-    ConnectionManager getConnectionManager();
-
+    ComputerNetwork getNetwork();
 }

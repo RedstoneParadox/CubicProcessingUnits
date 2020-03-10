@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Tickable
 import java.util.*
 import java.util.function.Consumer
@@ -19,6 +20,7 @@ import javax.script.ScriptContext
 import javax.script.ScriptEngine
 
 class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEntityClientSerializable {
+    private var booted: Boolean = false
     private var script: String = ""
 
     private val engines: Stack<ScriptEngine> = Stack()
@@ -28,8 +30,9 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
     private val peripherals: MutableMap<PeripheralHandle, Peripheral<*>> = mutableMapOf()
     private val handles: MutableMap<String, PeripheralHandle> = mutableMapOf()
 
-    init {
-        engines.push(createNewEngine())
+    private fun boot() {
+        if (world is ServerWorld) engines.push(createNewEngine())
+        booted = true
     }
 
     fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>, name: String) {
@@ -55,6 +58,7 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
             var engine: ScriptEngine? = null
             while (engine == null) {
                 engine = requestEngine()
+                println(pos)
             }
 
             try {
@@ -134,6 +138,7 @@ class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEnti
     }
 
     override fun tick() {
+        if (!booted) boot()
         val remaining = jobs.filter { it.isActive }
         jobs.clear()
         jobs.addAll(remaining)
