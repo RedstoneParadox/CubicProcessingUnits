@@ -7,12 +7,13 @@ import io.github.redstoneparadox.cpu.block.CpuBlocks
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntityTypes
 import io.github.redstoneparadox.cpu.item.CpuItems
 import io.github.redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.cpu.misc.PrinterContainer
 import io.github.redstoneparadox.cpu.networking.Packets
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 
-@SuppressWarnings("unused")
+@Suppress("unused")
 fun init() {
     CpuBlockEntityTypes.register()
     CpuBlocks.register()
@@ -20,6 +21,9 @@ fun init() {
 
     ContainerProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id(), ContainerFactory { syncID, id, player, buf ->
         CpuContainer(player.world, buf.readBlockPos(), syncID)
+    })
+    ContainerProviderRegistry.INSTANCE.registerFactory("cpu:printer".id(), ContainerFactory { syncID, id, player, buf ->
+        PrinterContainer(player.world, buf.readBlockPos(), player.inventory, syncID)
     })
     Packets.registerPackets()
 

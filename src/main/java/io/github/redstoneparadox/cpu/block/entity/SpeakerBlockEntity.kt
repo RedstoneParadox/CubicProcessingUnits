@@ -16,7 +16,7 @@ class SpeakerBlockEntity : PeripheralBlockEntity(CpuBlockEntityTypes.SPEAKER) {
     var handle: PeripheralHandle? = null
     var volume: Float = 0.0f
 
-    override fun getPeripheral(handle: PeripheralHandle?): Peripheral<*> {
+    override fun getPeripheral(handle: PeripheralHandle): Peripheral<*> {
         this.handle = handle
         return SpeakerPeripheral(this)
     }

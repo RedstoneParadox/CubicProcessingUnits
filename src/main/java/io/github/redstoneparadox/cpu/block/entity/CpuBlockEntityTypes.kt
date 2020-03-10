@@ -10,7 +10,7 @@ object CpuBlockEntityTypes {
     val CPU: BlockEntityType<CpuBlockEntity> = BlockEntityType.Builder.create(Supplier { CpuBlockEntity() }, CpuBlocks.CPU).build(null)
     val SPEAKER: BlockEntityType<SpeakerBlockEntity> = BlockEntityType.Builder.create(Supplier { SpeakerBlockEntity() }, CpuBlocks.SPEAKER).build(null)
     val MODEM: BlockEntityType<ModemBlockEntity> = BlockEntityType.Builder.create(Supplier { ModemBlockEntity() }, CpuBlocks.MODEM).build(null)
-    val PRINTER: BlockEntityType<PrinterBlockEntity> = BlockEntityType.Builder.create(Supplier { PrinterBlockEntity() }, null).build(null)
+    val PRINTER: BlockEntityType<PrinterBlockEntity> = BlockEntityType.Builder.create(Supplier { PrinterBlockEntity() }, CpuBlocks.PRINTER).build(null)
 
     fun register() {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, "cpu:cpu", CPU)

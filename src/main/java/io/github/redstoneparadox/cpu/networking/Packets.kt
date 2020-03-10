@@ -2,9 +2,11 @@ package io.github.redstoneparadox.cpu.networking
 
 import io.github.redstoneparadox.cpu.id
 import io.github.redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.cpu.misc.PrinterContainer
 import io.netty.buffer.Unpooled
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.server.PlayerStream
+import net.minecraft.container.Container
 import net.minecraft.network.Packet
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket
 import net.minecraft.server.network.ServerPlayNetworkHandler
@@ -16,7 +18,8 @@ import net.minecraft.world.World
 
 object Packets {
 
-    private val listeners: MutableMap<Int, CpuContainer> = mutableMapOf()
+    private val cpuListeners: MutableMap<Int, CpuContainer> = mutableMapOf()
+    private val printerListensers: MutableMap<Int, PrinterContainer> = mutableMapOf()
 
     fun registerPackets() {
         ServerSidePacketRegistry.INSTANCE.register("cpu:save".id()) { context, buf ->
@@ -27,16 +30,17 @@ object Packets {
         }
     }
 
-    fun listen(container: CpuContainer) {
-        listeners[container.syncId] = container
+    fun listen(container: Container) {
+        if (container is CpuContainer) cpuListeners[container.syncId] = container
+        else if(container is PrinterContainer) printerListensers[container.syncId] = container
     }
 
     private fun saveScript(syncId: Int, script: String) {
-        listeners[syncId]?.saveRemote(script)
+        cpuListeners[syncId]?.saveRemote(script)
     }
 
     private fun runScript(syncId: Int) {
-        listeners[syncId]?.runRemote()
+        cpuListeners[syncId]?.runRemote()
     }
 
     fun soundPacket(world: World, pos: BlockPos, id: Identifier, f: Float, g: Float, b: Boolean) {

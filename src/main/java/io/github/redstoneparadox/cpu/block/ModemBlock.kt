@@ -1,7 +1,6 @@
 package io.github.redstoneparadox.cpu.block
 
 import io.github.redstoneparadox.cpu.block.entity.ModemBlockEntity
-import io.github.redstoneparadox.cpu.block.entity.SpeakerBlockEntity
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
@@ -19,7 +18,7 @@ class ModemBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).bu
 
     override fun onBlockRemoved(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
         val be = world.getBlockEntity(pos)
-        if (be is SpeakerBlockEntity) be.handle?.disconnect()
+        if (be is ModemBlockEntity) be.handle?.disconnect()
         super.onBlockRemoved(state, world, pos, newState, moved)
     }
 

@@ -10,6 +10,7 @@ object CpuItems {
     val CPU = blockItem(CpuBlocks.CPU)
     val SPEAKER = blockItem(CpuBlocks.SPEAKER)
     val MODEM = blockItem(CpuBlocks.MODEM)
+    val PRINTER = blockItem(CpuBlocks.PRINTER)
 
     val PRINTED_DOCUMENT = WrittenBookItem(Item.Settings().group(ItemGroup.MISC))
 
@@ -17,6 +18,7 @@ object CpuItems {
         Registry.register(Registry.ITEM, "cpu:cpu", CPU)
         Registry.register(Registry.ITEM, "cpu:speaker", SPEAKER)
         Registry.register(Registry.ITEM, "cpu:modem", MODEM)
+        register("cpu:printer", PRINTER)
 
         register("cpu:printed_document", PRINTED_DOCUMENT)
     }

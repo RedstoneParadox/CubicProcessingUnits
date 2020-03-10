@@ -12,15 +12,19 @@ import net.minecraft.item.Items
 import net.minecraft.item.WrittenBookItem
 import net.minecraft.util.DyeColor
 import net.minecraft.util.math.Direction
+import org.jetbrains.annotations.NotNull
 
 class PrinterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.PRINTER), SidedInventory {
+    var handle: PeripheralHandle? = null
+
     var scanStack = ItemStack.EMPTY
     var paperStack = ItemStack.EMPTY
     var inkStack = ItemStack.EMPTY
     var outputStack = ItemStack.EMPTY
 
-    override fun getPeripheral(handle: PeripheralHandle?): Peripheral<*> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getPeripheral(handle: PeripheralHandle): Peripheral<*> {
+        this.handle = handle
+        return PrinterPeripheral(this)
     }
 
     override fun getDefaultName(): String {
@@ -121,5 +125,9 @@ class PrinterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.PRINTER), Si
             }
             else -> false
         }
+    }
+
+    class PrinterPeripheral(wrapped: @NotNull PrinterBlockEntity) : Peripheral<PrinterBlockEntity>(wrapped) {
+
     }
 }
