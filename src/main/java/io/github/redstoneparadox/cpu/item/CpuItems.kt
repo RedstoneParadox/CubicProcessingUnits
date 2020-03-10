@@ -12,7 +12,7 @@ object CpuItems {
     val MODEM = blockItem(CpuBlocks.MODEM)
     val PRINTER = blockItem(CpuBlocks.PRINTER)
 
-    val PRINTED_DOCUMENT = WrittenBookItem(Item.Settings().group(ItemGroup.MISC))
+    val PRINTED_DOCUMENT = WrittenBookItem(Item.Settings().group(ItemGroup.MISC).maxCount(16))
 
     fun register() {
         Registry.register(Registry.ITEM, "cpu:cpu", CPU)

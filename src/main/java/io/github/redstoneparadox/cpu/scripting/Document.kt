@@ -5,7 +5,7 @@ import io.github.redstoneparadox.cpu.api.Cloneable
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
 
-class Document(var name: String, var author: String): Cloneable<Document> {
+class Document(var title: String, var author: String): Cloneable<Document> {
     private val pages: MutableList<String> = mutableListOf()
 
     fun getPage(index: Int): String {
@@ -16,10 +16,14 @@ class Document(var name: String, var author: String): Cloneable<Document> {
         pages[index] = contents
     }
 
+    fun addPage(contents: String) {
+        pages.add(contents)
+    }
+
     override fun clone(): Document {
-        val newDocument = Document(name, author)
+        val newDocument = Document(title, author)
         for (value in pages.withIndex()) {
-            newDocument.setPage(value.index, value.value)
+            newDocument.addPage(value.value)
         }
         return newDocument
     }
@@ -27,13 +31,12 @@ class Document(var name: String, var author: String): Cloneable<Document> {
     fun toNBT(): CompoundTag {
         val nbt = CompoundTag()
 
-        nbt.putString("name", name)
+        nbt.putString("title", title)
         nbt.putString("author", author)
 
         val pagesTag = ListTag()
         for (page in pages) {
-            val pageTag = CompoundTag()
-            pageTag.putString("text", page)
+            val pageTag = StringTag.of(page)
             pagesTag.add(pageTag)
         }
         nbt.put("pages", pagesTag)
@@ -43,21 +46,16 @@ class Document(var name: String, var author: String): Cloneable<Document> {
 
     companion object {
         fun fromNBT(nbt: CompoundTag): Document {
-            val nameTag = nbt["name"]
+            val titleTag = nbt["title"]
             val authorTag = nbt["author"]
             val pagesTag = nbt["pages"]
 
-            if (nameTag is StringTag && authorTag is StringTag && pagesTag is ListTag) {
-                val document = Document(nameTag.asString(), authorTag.asString())
+            if (titleTag is StringTag && authorTag is StringTag && pagesTag is ListTag) {
+                val document = Document(titleTag.asString(), authorTag.asString())
 
-                var index = 0;
                 for (pageTag in pagesTag) {
-                    if (pageTag is CompoundTag) {
-                        val textTag = pageTag["text"]
-                        if (textTag is StringTag) {
-                            document.setPage(index, textTag.asString())
-                            index += 1
-                        }
+                    if (pageTag is StringTag) {
+                        document.addPage(pageTag.asString())
                     }
                 }
 

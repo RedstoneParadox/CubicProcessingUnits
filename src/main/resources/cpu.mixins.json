@@ -3,9 +3,11 @@
   "package": "io.github.redstoneparadox.cpu.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "server.network.ServerPlayerEntityMixin",
     "server.world.MixinServerWorld"
   ],
   "client": [
+    "client.network.ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
