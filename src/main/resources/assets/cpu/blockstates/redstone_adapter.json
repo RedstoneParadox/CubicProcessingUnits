@@ -1,0 +1,12 @@
+{
+  "multipart": [
+    {
+      "when": { "OR": [{"emitting": "false", "power": "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15"}, {"emitting": "true", "power":  "0"}] },
+      "apply": { "model": "cpu:block/redstone_adapter_unpowered" }
+    },
+    {
+      "when": { "emitting": "true", "power":  "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15"},
+      "apply": { "model": "cpu:block/redstone_adapter_powered" }
+    }
+  ]
+}
