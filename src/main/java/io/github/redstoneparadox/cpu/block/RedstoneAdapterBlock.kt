@@ -21,7 +21,7 @@ class RedstoneAdapterBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON
 
     override fun onBlockRemoved(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
         val be = world.getBlockEntity(pos)
-        if (be is ModemBlockEntity) be.handle?.disconnect()
+        if (be is RedstoneAdapterBlockEntity) be.handle?.disconnect()
         super.onBlockRemoved(state, world, pos, newState, moved)
     }
 
@@ -30,8 +30,7 @@ class RedstoneAdapterBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON
     }
 
     override fun emitsRedstonePower(state: BlockState): Boolean {
-        if (state[EMITTING] == false) return false
-        return true
+        return state[EMITTING]
     }
 
     override fun getWeakRedstonePower(state: BlockState, view: BlockView, pos: BlockPos, facing: Direction): Int {

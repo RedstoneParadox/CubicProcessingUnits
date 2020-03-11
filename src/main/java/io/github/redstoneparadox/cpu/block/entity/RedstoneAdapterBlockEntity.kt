@@ -41,8 +41,8 @@ class RedstoneAdapterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.REDS
         val world = world
         if (world != null) {
             val state = world.getBlockState(pos)
-            if (state[RedstoneAdapterBlock.EMITTING] == false) return 0
-            else return state[RedstoneAdapterBlock.POWER]
+            if (state[RedstoneAdapterBlock.EMITTING] == true) return 0
+            else return world.getReceivedRedstonePower(pos)
         }
         return 0
     }
