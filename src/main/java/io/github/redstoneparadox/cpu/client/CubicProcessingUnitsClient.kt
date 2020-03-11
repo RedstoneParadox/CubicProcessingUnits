@@ -8,6 +8,7 @@ import io.github.redstoneparadox.cpu.misc.PrinterContainer
 import io.github.redstoneparadox.oaktree.client.gui.ScreenBuilder
 import io.github.redstoneparadox.oaktree.client.gui.control.*
 import io.github.redstoneparadox.oaktree.client.gui.style.ColorStyleBox
+import io.github.redstoneparadox.oaktree.client.gui.style.StyleBox
 import io.github.redstoneparadox.oaktree.client.gui.style.TextureStyleBox
 import io.github.redstoneparadox.oaktree.client.gui.style.Theme
 import io.github.redstoneparadox.oaktree.client.gui.util.ControlAnchor
@@ -68,8 +69,9 @@ fun computerControlTree(): Control<*> {
                     ButtonControl()
                         .size(50f, 10f)
                         .anchor(ControlAnchor.CENTER)
-                        .defaultStyle(ColorStyleBox(RGBAColor.red()))
-                        .heldStyle(ColorStyleBox(RGBAColor(0.7f, 0f, 0f)))
+                        .defaultStyle(computerButtonStyle(0, 1))
+                        .heldStyle(computerButtonStyle(0, 0))
+                        .hoverStyle(computerButtonStyle(0, 2))
                         .onClick { gui, control ->
                             val container = gui.screenContainer
                             if (container.isPresent && container.get() is ComputerContainer) {
@@ -81,8 +83,9 @@ fun computerControlTree(): Control<*> {
                     ButtonControl()
                         .size(50f, 10f)
                         .anchor(ControlAnchor.CENTER)
-                        .defaultStyle(ColorStyleBox(RGBAColor.green()))
-                        .heldStyle(ColorStyleBox(RGBAColor(0f, 0.7f, 0.0f)))
+                        .defaultStyle(computerButtonStyle(1, 1))
+                        .heldStyle(computerButtonStyle(1, 0))
+                        .hoverStyle(computerButtonStyle(1, 2))
                         .onClick { gui, control ->
                             val container = gui.screenContainer
                             if (container.isPresent && container.get() is ComputerContainer) {
@@ -94,8 +97,9 @@ fun computerControlTree(): Control<*> {
                     ButtonControl()
                         .size(50f, 10f)
                         .anchor(ControlAnchor.CENTER)
-                        .defaultStyle(ColorStyleBox(RGBAColor.blue()))
-                        .heldStyle(ColorStyleBox(RGBAColor(0f, 0f, 0.7f)))
+                        .defaultStyle(computerButtonStyle(2, 1))
+                        .heldStyle(computerButtonStyle(2, 0))
+                        .hoverStyle(computerButtonStyle(2, 2))
                         .onClick { gui, control ->
                             val container = gui.screenContainer
                             if (container.isPresent && container.get() is ComputerContainer) {
@@ -104,6 +108,14 @@ fun computerControlTree(): Control<*> {
                         }
                 )
         )
+}
+
+fun computerButtonStyle(left: Int, top: Int): StyleBox {
+    return TextureStyleBox("cpu:textures/gui/ui.png")
+        .scale(1f)
+        .fileDimensions(256f, 256f)
+        .textureSize(50, 10)
+        .drawOrigin(left * 50, top * 10)
 }
 
 fun printerControlTree(): Control<*> {
@@ -202,49 +214,53 @@ fun printerControlTree(): Control<*> {
                 )
         )
         .child(
-            SplitPanelControl()
-                .size(176f, 83f)
-                .splitSize(62f)
-                .verticalSplit(true)
-                .child(
-                    GridPanelControl()
-                        .size(9 * 18f, 3 * 18f)
-                        .rows(3)
-                        .columns(9)
+            playerInventory()
+        )
+}
+
+fun playerInventory(): Control<*> {
+    return             SplitPanelControl()
+        .size(176f, 83f)
+        .splitSize(62f)
+        .verticalSplit(true)
+        .child(
+            GridPanelControl()
+                .size(9 * 18f, 3 * 18f)
+                .rows(3)
+                .columns(9)
+                .anchor(ControlAnchor.CENTER)
+                .position(0f, -1f)
+                .cells { t1, t2, index ->
+                    ItemSlotControl(index + 9)
+                        .defaultStyle(
+                            TextureStyleBox("oaktree:textures/gui/ui.png")
+                                .drawOrigin(18, 0)
+                                .fileDimensions(256f, 256f)
+                                .textureSize(18, 18)
+                                .scale(1f)
+                        )
                         .anchor(ControlAnchor.CENTER)
-                        .position(0f, -1f)
-                        .cells { t1, t2, index ->
-                            ItemSlotControl(index + 9)
-                                .defaultStyle(
-                                    TextureStyleBox("oaktree:textures/gui/ui.png")
-                                        .drawOrigin(18, 0)
-                                        .fileDimensions(256f, 256f)
-                                        .textureSize(18, 18)
-                                        .scale(1f)
-                                )
-                                .anchor(ControlAnchor.CENTER)
-                                .size(18f, 18f)
-                        }
-                )
-                .child(
-                    GridPanelControl()
-                        .size(9 * 18f, 18f)
-                        .rows(1)
-                        .columns(9)
+                        .size(18f, 18f)
+                }
+        )
+        .child(
+            GridPanelControl()
+                .size(9 * 18f, 18f)
+                .rows(1)
+                .columns(9)
+                .anchor(ControlAnchor.CENTER)
+                .position(0f, 2f)
+                .cells { t1, t2, index ->
+                    ItemSlotControl(index)
+                        .defaultStyle(
+                            TextureStyleBox("oaktree:textures/gui/ui.png")
+                                .drawOrigin(18, 0)
+                                .fileDimensions(256f, 256f)
+                                .textureSize(18, 18)
+                                .scale(1f)
+                        )
                         .anchor(ControlAnchor.CENTER)
-                        .position(0f, 2f)
-                        .cells { t1, t2, index ->
-                            ItemSlotControl(index)
-                                .defaultStyle(
-                                    TextureStyleBox("oaktree:textures/gui/ui.png")
-                                        .drawOrigin(18, 0)
-                                        .fileDimensions(256f, 256f)
-                                        .textureSize(18, 18)
-                                        .scale(1f)
-                                )
-                                .anchor(ControlAnchor.CENTER)
-                                .size(18f, 18f)
-                        }
-                )
+                        .size(18f, 18f)
+                }
         )
 }
