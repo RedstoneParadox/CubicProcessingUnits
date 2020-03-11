@@ -36,7 +36,7 @@ class Document(var title: String, var author: String): Cloneable<Document> {
 
         val pagesTag = ListTag()
         for (page in pages) {
-            val pageTag = StringTag.of(page)
+            val pageTag = StringTag.of("{\"text\":\"$page\"}")
             pagesTag.add(pageTag)
         }
         nbt.put("pages", pagesTag)

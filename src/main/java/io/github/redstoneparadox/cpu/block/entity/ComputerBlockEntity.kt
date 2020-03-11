@@ -3,6 +3,8 @@ package io.github.redstoneparadox.cpu.block.entity
 import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
+import io.github.redstoneparadox.cpu.scripting.Folder
+import io.github.redstoneparadox.cpu.util.Action
 import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
@@ -16,6 +18,7 @@ import net.minecraft.util.math.Direction
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
+import java.util.function.Supplier
 import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
@@ -23,8 +26,8 @@ import javax.script.ScriptEngine
 class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable, BlockEntityClientSerializable {
     private var booted: Boolean = false
     private var script: String = ""
+    private val rootDirectory: Folder = Folder.createRootDirectory()
 
-    private val engines: Stack<ScriptEngine> = Stack()
     private val jobs: MutableList<Job> = mutableListOf()
     private var cores: Int = 1
 
@@ -34,12 +37,6 @@ class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable,
     private fun boot() {
         val world = world
         if (world != null && !world.isClient) {
-            engines.push(createNewEngine())
-            engines.push(createNewEngine())
-            engines.push(createNewEngine())
-            engines.push(createNewEngine())
-            engines.push(createNewEngine())
-
             for (direction in Direction.values()) {
                 val neighborPos = pos.offset(direction)
                 val neighborBe = world.getBlockEntity(neighborPos)
@@ -90,21 +87,6 @@ class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable,
     }
 
     @Synchronized
-    private fun requestEngine(): ScriptEngine? {
-        if (engines.isEmpty()) return null
-        return engines.pop()
-    }
-
-    @Synchronized
-    private fun returnEngine(engine: ScriptEngine) {
-        if (engines.size < cores) {
-            val bindings = fillBindings(engine.createBindings())
-            engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE)
-            engines.push(engine)
-        }
-    }
-
-    @Synchronized
     private fun createNewEngine(): ScriptEngine {
         val initialized = SynchronizedBox(false)
         val filter = { _: String -> !initialized.get()}
@@ -121,6 +103,7 @@ class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable,
     private fun fillBindings(bindings: Bindings): Bindings {
         bindings["delay"] = Consumer { ms: Long -> Thread.sleep(ms) }
         bindings["getPeripheral"] = Function { name: String -> getPeripheral(name)}
+        bindings["openFileSystem"] = Supplier { rootDirectory }
 
         return bindings
     }

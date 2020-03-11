@@ -31,9 +31,12 @@ class Folder private constructor(var name: String, private val parent: Folder? =
     }
 
     private fun splitAtExtension(name: String): Pair<String, String> {
-        var splitPoint = 0;
+        var splitPoint = 0
         for (i in name.indices.reversed()) {
-            if (name[i] == '.') splitPoint = i; break
+            if (name[i] == '.') {
+                splitPoint = i
+                break
+            }
         }
         var actualName = ""
         var extension = ""
@@ -49,11 +52,11 @@ class Folder private constructor(var name: String, private val parent: Folder? =
     }
 
     companion object {
-        fun createDefaultFileSystem(): Folder {
+        fun createRootDirectory(): Folder {
             val root = Folder("C")
             val document = Document("Test Document", "RedstoneParadox")
             document.addPage("This document exists for the sake of testing out the file system.")
-
+            root.files.add(Document.DocumentFile(document.title, document))
             return root
         }
     }

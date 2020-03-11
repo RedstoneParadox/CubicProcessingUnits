@@ -13,7 +13,7 @@ interface File<T> {
     companion object {
         private val SUPPLIERS: MutableMap<String, (String) -> File<*>> = mutableMapOf()
 
-        fun blank(extension: String, name: String): File<*> {
+        fun blank(name: String, extension: String): File<*> {
             return SUPPLIERS[extension]?.invoke(name) ?: throw Exception()
         }
 
