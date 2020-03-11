@@ -47,13 +47,13 @@ fun init() {
 
 fun computerControlTree(): Control<*> {
     val textEdit = TextEditControl()
-        .size(280f, 160f)
+        .size(330f, 210f)
         .anchor(ControlAnchor.CENTER)
-        .maxLines(15).shadow(true)
+        .maxLines(23).shadow(true)
         .id("text_edit")
     return SplitPanelControl()
-        .size(300f, 200f)
-        .splitSize(180f)
+        .size(350f, 250f)
+        .splitSize(230f)
         .anchor(ControlAnchor.CENTER)
         .verticalSplit(true)
         .id("base")
@@ -229,7 +229,7 @@ fun playerInventory(): Control<*> {
                 .rows(3)
                 .columns(9)
                 .anchor(ControlAnchor.CENTER)
-                .position(0f, -1f)
+                .position(0f, 2f)
                 .cells { t1, t2, index ->
                     ItemSlotControl(index + 9)
                         .defaultStyle(
@@ -249,7 +249,7 @@ fun playerInventory(): Control<*> {
                 .rows(1)
                 .columns(9)
                 .anchor(ControlAnchor.CENTER)
-                .position(0f, 2f)
+                .position(0f, 1f)
                 .cells { t1, t2, index ->
                     ItemSlotControl(index)
                         .defaultStyle(
