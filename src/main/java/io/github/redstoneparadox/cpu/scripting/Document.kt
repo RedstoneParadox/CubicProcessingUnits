@@ -65,4 +65,17 @@ class Document(var title: String, var author: String): Cloneable<Document> {
             return Document("", "")
         }
     }
+
+    class DocumentFile(override var name: String, private var document: Document): File<Document> {
+        override val extension = "txt"
+
+        override fun open(): Document {
+            return document.clone()
+        }
+
+        override fun save(t: Document) {
+            this.document = t
+            name = document.title
+        }
+    }
 }

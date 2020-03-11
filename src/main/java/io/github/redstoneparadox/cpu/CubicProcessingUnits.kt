@@ -9,6 +9,8 @@ import io.github.redstoneparadox.cpu.item.CpuItems
 import io.github.redstoneparadox.cpu.misc.ComputerContainer
 import io.github.redstoneparadox.cpu.misc.PrinterContainer
 import io.github.redstoneparadox.cpu.networking.Packets
+import io.github.redstoneparadox.cpu.scripting.Document
+import io.github.redstoneparadox.cpu.scripting.File
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -38,6 +40,12 @@ fun init() {
             it.append(CpuItems.REDSTONE_APADTER)
         }
         .build()
+
+    File.addSupplier("txt") {
+        val document = Document(it, "")
+        document.addPage("")
+        Document.DocumentFile(it, document)
+    }
 }
 
 fun String.id(): Identifier {
