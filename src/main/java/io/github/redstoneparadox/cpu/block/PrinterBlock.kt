@@ -1,6 +1,5 @@
 package io.github.redstoneparadox.cpu.block
 
-import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
 import io.github.redstoneparadox.cpu.block.entity.PrinterBlockEntity
 import io.github.redstoneparadox.cpu.id
 import net.fabricmc.fabric.api.block.FabricBlockSettings

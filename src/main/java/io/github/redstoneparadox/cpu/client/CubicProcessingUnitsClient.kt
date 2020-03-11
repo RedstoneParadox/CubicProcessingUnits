@@ -3,7 +3,7 @@ package io.github.redstoneparadox.cpu.client
 
 import io.github.redstoneparadox.cpu.client.networking.ClientPackets
 import io.github.redstoneparadox.cpu.id
-import io.github.redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.cpu.misc.ComputerContainer
 import io.github.redstoneparadox.cpu.misc.PrinterContainer
 import io.github.redstoneparadox.oaktree.client.gui.ScreenBuilder
 import io.github.redstoneparadox.oaktree.client.gui.control.*
@@ -16,17 +16,17 @@ import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 
 @Suppress("unused")
 fun init() {
-    ScreenProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id()) { syncID, id, player, buf ->
-        ScreenBuilder(cpuControlTree())
+    ScreenProviderRegistry.INSTANCE.registerFactory("cpu:computer".id()) { syncID, id, player, buf ->
+        ScreenBuilder(computerControlTree())
             .container(
-                CpuContainer(
+                ComputerContainer(
                     player.world,
                     buf.readBlockPos(),
                     syncID
                 )
             )
             .theme(Theme.vanilla())
-            .buildContainerScreen<CpuContainer>()
+            .buildContainerScreen<ComputerContainer>()
     }
     ScreenProviderRegistry.INSTANCE.registerFactory("cpu:printer".id()) { syncID, id, player, buf ->
         ScreenBuilder(printerControlTree())
@@ -39,12 +39,12 @@ fun init() {
                 )
             )
             .theme(Theme.vanilla())
-            .buildContainerScreen<CpuContainer>()
+            .buildContainerScreen<ComputerContainer>()
     }
     ClientPackets.registerPackets()
 }
 
-fun cpuControlTree(): Control<*> {
+fun computerControlTree(): Control<*> {
     val textEdit = TextEditControl()
         .size(280f, 160f)
         .anchor(ControlAnchor.CENTER)
@@ -72,8 +72,8 @@ fun cpuControlTree(): Control<*> {
                         .heldStyle(ColorStyleBox(RGBAColor(0.7f, 0f, 0f)))
                         .onClick { gui, control ->
                             val container = gui.screenContainer
-                            if (container.isPresent && container.get() is CpuContainer) {
-                                (container.get() as CpuContainer).save(textEdit.text)
+                            if (container.isPresent && container.get() is ComputerContainer) {
+                                (container.get() as ComputerContainer).save(textEdit.text)
                             }
                         }
                 )
@@ -85,8 +85,8 @@ fun cpuControlTree(): Control<*> {
                         .heldStyle(ColorStyleBox(RGBAColor(0f, 0.7f, 0.0f)))
                         .onClick { gui, control ->
                             val container = gui.screenContainer
-                            if (container.isPresent && container.get() is CpuContainer) {
-                                textEdit.text = (container.get() as CpuContainer).load()
+                            if (container.isPresent && container.get() is ComputerContainer) {
+                                textEdit.text = (container.get() as ComputerContainer).load()
                             }
                         }
                 )
@@ -98,8 +98,8 @@ fun cpuControlTree(): Control<*> {
                         .heldStyle(ColorStyleBox(RGBAColor(0f, 0f, 0.7f)))
                         .onClick { gui, control ->
                             val container = gui.screenContainer
-                            if (container.isPresent && container.get() is CpuContainer) {
-                                (container.get() as CpuContainer).run()
+                            if (container.isPresent && container.get() is ComputerContainer) {
+                                (container.get() as ComputerContainer).run()
                             }
                         }
                 )

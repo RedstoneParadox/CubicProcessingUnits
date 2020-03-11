@@ -5,13 +5,13 @@ import net.minecraft.util.registry.Registry
 
 object CpuBlocks {
 
-    val CPU: Block = CpuBlock()
+    val COMPUTER: Block = ComputerBlock()
     val SPEAKER: Block = SpeakerBlock()
     val MODEM: Block = ModemBlock()
     val PRINTER: Block = PrinterBlock()
 
     fun register() {
-        Registry.register(Registry.BLOCK, "cpu:cpu", CPU)
+        Registry.register(Registry.BLOCK, "cpu:computer", COMPUTER)
         Registry.register(Registry.BLOCK, "cpu:speaker", SPEAKER)
         Registry.register(Registry.BLOCK, "cpu:modem", MODEM)
         register("cpu:printer", PRINTER)

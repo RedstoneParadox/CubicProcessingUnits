@@ -3,7 +3,7 @@
   "textures": {
     "top": "cpu:block/peripheral_top",
     "bottom": "cpu:block/peripheral_bottom",
-    "front": "cpu:block/cpu_front",
+    "front": "cpu:block/computer_front",
     "side": "cpu:block/peripheral_side"
   }
 }

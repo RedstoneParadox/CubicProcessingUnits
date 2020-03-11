@@ -12,16 +12,15 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
-import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntity
-import io.github.redstoneparadox.cpu.block.entity.SpeakerBlockEntity
+import io.github.redstoneparadox.cpu.block.entity.ComputerBlockEntity
 import io.github.redstoneparadox.cpu.id
 import net.minecraft.block.*
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
 
-class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), BlockEntityProvider {
+class ComputerBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), BlockEntityProvider {
     override fun createBlockEntity(view: BlockView): BlockEntity {
-        return CpuBlockEntity()
+        return ComputerBlockEntity()
     }
 
     override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, neighborPos: BlockPos, moved: Boolean) {
@@ -30,7 +29,7 @@ class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK
 
     override fun onBlockRemoved(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
         val be = world.getBlockEntity(pos)
-        if (be is CpuBlockEntity) be.onRemove()
+        if (be is ComputerBlockEntity) be.onRemove()
         super.onBlockRemoved(state, world, pos, newState, moved)
     }
 
@@ -38,8 +37,8 @@ class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK
         if (world.isClient) return ActionResult.SUCCESS
 
         val be = world.getBlockEntity(pos)
-        if (be != null && be is CpuBlockEntity) {
-            ContainerProviderRegistry.INSTANCE.openContainer("cpu:cpu".id(), player) { buf -> buf.writeBlockPos(pos) }
+        if (be != null && be is ComputerBlockEntity) {
+            ContainerProviderRegistry.INSTANCE.openContainer("cpu:computer".id(), player) { buf -> buf.writeBlockPos(pos) }
         }
 
         return ActionResult.SUCCESS
@@ -58,7 +57,7 @@ class CpuBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK
             if (!world.isClient) {
                 val be = world.getBlockEntity(pos)
                 val neighborBe = world.getBlockEntity(neighborPos)
-                if (be is CpuBlockEntity && neighborBe is PeripheralBlockEntity) {
+                if (be is ComputerBlockEntity && neighborBe is PeripheralBlockEntity) {
                     val handle = PeripheralHandle(be)
                     val peripheral = neighborBe.getPeripheral(handle)
                     be.connect(handle, peripheral, neighborBe.defaultName)

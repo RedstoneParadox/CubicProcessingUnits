@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier
 import io.github.redstoneparadox.cpu.block.CpuBlocks
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntityTypes
 import io.github.redstoneparadox.cpu.item.CpuItems
-import io.github.redstoneparadox.cpu.misc.CpuContainer
+import io.github.redstoneparadox.cpu.misc.ComputerContainer
 import io.github.redstoneparadox.cpu.misc.PrinterContainer
 import io.github.redstoneparadox.cpu.networking.Packets
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -20,7 +20,7 @@ fun init() {
     CpuItems.register()
 
     ContainerProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id(), ContainerFactory { syncID, id, player, buf ->
-        CpuContainer(player.world, buf.readBlockPos(), syncID)
+        ComputerContainer(player.world, buf.readBlockPos(), syncID)
     })
     ContainerProviderRegistry.INSTANCE.registerFactory("cpu:printer".id(), ContainerFactory { syncID, id, player, buf ->
         PrinterContainer(player.world, buf.readBlockPos(), player.inventory, syncID)
@@ -29,9 +29,9 @@ fun init() {
 
     FabricItemGroupBuilder
         .create("cpu:cpu".id())
-        .icon { ItemStack(CpuItems.CPU) }
+        .icon { ItemStack(CpuItems.COMPUTER) }
         .appendItems {
-            it.append(CpuItems.CPU)
+            it.append(CpuItems.COMPUTER)
             it.append(CpuItems.SPEAKER)
             it.append(CpuItems.MODEM)
             it.append(CpuItems.PRINTER)

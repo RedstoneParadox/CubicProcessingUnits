@@ -7,12 +7,10 @@ import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
 import java.util.*
@@ -22,7 +20,7 @@ import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
 
-class CpuBlockEntity : BlockEntity(CpuBlockEntityTypes.CPU), Tickable, BlockEntityClientSerializable {
+class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable, BlockEntityClientSerializable {
     private var booted: Boolean = false
     private var script: String = ""
 

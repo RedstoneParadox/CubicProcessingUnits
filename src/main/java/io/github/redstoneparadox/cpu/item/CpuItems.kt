@@ -7,7 +7,7 @@ import net.minecraft.util.registry.Registry
 
 object CpuItems {
 
-    val CPU = blockItem(CpuBlocks.CPU)
+    val COMPUTER = blockItem(CpuBlocks.COMPUTER)
     val SPEAKER = blockItem(CpuBlocks.SPEAKER)
     val MODEM = blockItem(CpuBlocks.MODEM)
     val PRINTER = blockItem(CpuBlocks.PRINTER)
@@ -15,7 +15,7 @@ object CpuItems {
     val PRINTED_DOCUMENT = WrittenBookItem(Item.Settings().group(ItemGroup.MISC).maxCount(16))
 
     fun register() {
-        Registry.register(Registry.ITEM, "cpu:cpu", CPU)
+        Registry.register(Registry.ITEM, "cpu:computer", COMPUTER)
         Registry.register(Registry.ITEM, "cpu:speaker", SPEAKER)
         Registry.register(Registry.ITEM, "cpu:modem", MODEM)
         register("cpu:printer", PRINTER)
