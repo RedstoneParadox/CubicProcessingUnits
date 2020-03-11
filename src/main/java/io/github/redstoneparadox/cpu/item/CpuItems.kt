@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.cpu.item
 
 import io.github.redstoneparadox.cpu.block.CpuBlocks
+import io.github.redstoneparadox.cpu.block.RedstoneAdapterBlock
 import net.minecraft.block.Block
 import net.minecraft.item.*
 import net.minecraft.util.registry.Registry
@@ -11,6 +12,7 @@ object CpuItems {
     val SPEAKER = blockItem(CpuBlocks.SPEAKER)
     val MODEM = blockItem(CpuBlocks.MODEM)
     val PRINTER = blockItem(CpuBlocks.PRINTER)
+    val REDSTONE_APADTER = blockItem(CpuBlocks.REDSTONE_ADAPTER)
 
     val PRINTED_DOCUMENT = WrittenBookItem(Item.Settings().group(ItemGroup.MISC).maxCount(16))
 
@@ -19,6 +21,7 @@ object CpuItems {
         Registry.register(Registry.ITEM, "cpu:speaker", SPEAKER)
         Registry.register(Registry.ITEM, "cpu:modem", MODEM)
         register("cpu:printer", PRINTER)
+        register("cpu:redstone_adapter", REDSTONE_APADTER)
 
         register("cpu:printed_document", PRINTED_DOCUMENT)
     }

@@ -2,6 +2,7 @@
   "block.cpu.computer": "Computer",
   "block.cpu.modem": "Modem",
   "block.cpu.printer": "Printer",
+  "block.cpu.redstone_adapter": "Redstone Adapter",
   "block.cpu.speaker": "Speaker",
 
   "item.cpu.printed_document": "Printed Document",

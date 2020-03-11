@@ -19,7 +19,7 @@ fun init() {
     CpuBlocks.register()
     CpuItems.register()
 
-    ContainerProviderRegistry.INSTANCE.registerFactory("cpu:cpu".id(), ContainerFactory { syncID, id, player, buf ->
+    ContainerProviderRegistry.INSTANCE.registerFactory("cpu:computer".id(), ContainerFactory { syncID, id, player, buf ->
         ComputerContainer(player.world, buf.readBlockPos(), syncID)
     })
     ContainerProviderRegistry.INSTANCE.registerFactory("cpu:printer".id(), ContainerFactory { syncID, id, player, buf ->
@@ -35,6 +35,7 @@ fun init() {
             it.append(CpuItems.SPEAKER)
             it.append(CpuItems.MODEM)
             it.append(CpuItems.PRINTER)
+            it.append(CpuItems.REDSTONE_APADTER)
         }
         .build()
 }

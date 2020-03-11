@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull
 import java.util.*
 import java.util.concurrent.Future
 
-class PrinterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.PRINTER), SidedInventory, Tickable {
+class PrinterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.REDSTONE_ADAPTER), SidedInventory, Tickable {
     var handle: PeripheralHandle? = null
 
     var scanStack = ItemStack.EMPTY
