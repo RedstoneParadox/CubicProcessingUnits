@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": { "model": "cpu:block/printer" }
+    "facing=north": { "model": "cpu:block/printer" },
+    "facing=south": { "model": "cpu:block/printer", "y": 180 },
+    "facing=west":  { "model": "cpu:block/printer", "y": 270 },
+    "facing=east":  { "model": "cpu:block/printer", "y": 90 }
   }
 }

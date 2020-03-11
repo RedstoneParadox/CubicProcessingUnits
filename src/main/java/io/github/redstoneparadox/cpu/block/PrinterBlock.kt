@@ -5,12 +5,11 @@ import io.github.redstoneparadox.cpu.block.entity.PrinterBlockEntity
 import io.github.redstoneparadox.cpu.id
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
-import net.minecraft.block.BlockRenderType
-import net.minecraft.block.BlockState
-import net.minecraft.block.BlockWithEntity
-import net.minecraft.block.Blocks
+import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ItemPlacementContext
+import net.minecraft.state.StateManager
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
@@ -18,7 +17,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class PrinterBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()) {
+class PrinterBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), BlockEntityProvider {
     override fun createBlockEntity(view: BlockView?): BlockEntity? {
         return PrinterBlockEntity()
     }
@@ -42,5 +41,13 @@ class PrinterBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).
 
     override fun getRenderType(state: BlockState?): BlockRenderType {
         return BlockRenderType.MODEL
+    }
+
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+        builder.add(FACING)
+    }
+
+    override fun getPlacementState(ctx: ItemPlacementContext): BlockState {
+        return defaultState.with(FACING, ctx.playerFacing.opposite)
     }
 }

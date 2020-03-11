@@ -1,6 +1,9 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/orientable_with_bottom",
   "textures": {
-    "all": "cpu:block/printer"
+    "top": "cpu:block/peripheral_top",
+    "bottom": "cpu:block/peripheral_bottom",
+    "front": "cpu:block/printer_front",
+    "side": "cpu:block/peripheral_side"
   }
 }

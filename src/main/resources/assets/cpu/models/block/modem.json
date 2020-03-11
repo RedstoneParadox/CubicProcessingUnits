@@ -1,6 +1,8 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube_bottom_top",
   "textures": {
-    "all": "cpu:block/modem"
+    "top": "cpu:block/peripheral_top",
+    "bottom": "cpu:block/peripheral_bottom",
+    "side": "cpu:block/wireless_modem_side"
   }
 }
