@@ -44,7 +44,7 @@ fun init() {
     File.addSupplier("txt") {
         val document = Document(it, "")
         document.addPage("")
-        Document.DocumentFile(it, document)
+        Document.DocumentFile(document)
     }
     File.addDeserializer("txt", Document.DocumentFile.Companion::fromNBT)
 }

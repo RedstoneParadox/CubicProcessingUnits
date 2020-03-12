@@ -26,7 +26,7 @@ import javax.script.ScriptEngine
 class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable, BlockEntityClientSerializable {
     private var booted: Boolean = false
     private var script: String = ""
-    private val rootDirectory: Folder = Folder.createRootDirectory()
+    private var rootDirectory: Folder = Folder.createRootDirectory()
 
     private val jobs: MutableList<Job> = mutableListOf()
     private var cores: Int = 1
@@ -130,11 +130,13 @@ class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable,
 
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains("script")) script = tag.getString("script")
+        if (tag.contains("filesystem")) rootDirectory = Folder.fromNBT(tag.getCompound("filesystem"))
         super.fromTag(tag)
     }
 
     override fun toTag(tag: CompoundTag): CompoundTag {
         tag.putString("script", script)
+        tag.put("filesystem", rootDirectory.toNBT())
         return super.toTag(tag)
     }
 
