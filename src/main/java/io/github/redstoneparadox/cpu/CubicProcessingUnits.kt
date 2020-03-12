@@ -46,6 +46,7 @@ fun init() {
         document.addPage("")
         Document.DocumentFile(it, document)
     }
+    File.addDeserializer("txt", Document.DocumentFile.Companion::fromNBT)
 }
 
 fun String.id(): Identifier {

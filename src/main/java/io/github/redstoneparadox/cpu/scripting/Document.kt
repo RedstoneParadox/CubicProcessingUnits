@@ -66,7 +66,10 @@ class Document(var title: String, var author: String): Cloneable<Document> {
         }
     }
 
-    class DocumentFile(override var name: String, private var document: Document): File<Document> {
+    class DocumentFile(private var document: Document): File<Document> {
+        override var name: String
+            get() = document.title
+            set(value) { document.title = value }
         override val extension = "txt"
 
         override fun open(): Document {
@@ -76,6 +79,21 @@ class Document(var title: String, var author: String): Cloneable<Document> {
         override fun save(t: Document) {
             this.document = t
             name = document.title
+        }
+
+        override fun toNBT(): CompoundTag {
+            val nbt = CompoundTag()
+
+            nbt.putString("extension", "txt")
+            nbt.put("data", document.toNBT())
+
+            return nbt
+        }
+
+        companion object {
+            fun fromNBT(nbt: CompoundTag): File<*> {
+                return DocumentFile(Document.fromNBT(nbt))
+            }
         }
     }
 }

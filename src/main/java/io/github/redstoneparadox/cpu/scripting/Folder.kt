@@ -1,7 +1,11 @@
 package io.github.redstoneparadox.cpu.scripting
 
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.StringTag
+
 class Folder private constructor(var name: String, private val parent: Folder? = null) {
-    private val subfolders: MutableList<Folder> = mutableListOf()
+    private val folders: MutableList<Folder> = mutableListOf()
     private val files: MutableList<File<*>> = mutableListOf()
 
     fun hasParent(): Boolean = parent != null
@@ -9,15 +13,15 @@ class Folder private constructor(var name: String, private val parent: Folder? =
     fun openParent(): Folder = parent ?: throw Exception()
 
     fun openSubfolder(name: String): Folder {
-        var folder = subfolders.firstOrNull { it.name == name }
+        var folder = folders.firstOrNull { it.name == name }
         if (folder == null) {
             folder = Folder(name, this)
-            subfolders.add(folder)
+            folders.add(folder)
         }
         return folder
     }
 
-    fun subfolders(): List<Folder> = subfolders.map { it }
+    fun subfolders(): List<Folder> = folders.map { it }
 
     fun hasFile(name: String): Boolean = files.any { "${it.name}.${it.extension}" == name }
 
@@ -28,6 +32,26 @@ class Folder private constructor(var name: String, private val parent: Folder? =
             file = File.blank(split.first, split.second)
         }
         return file
+    }
+
+    internal fun toNBT(): CompoundTag {
+        val nbt = CompoundTag()
+
+        nbt.putString("name", name)
+
+        val foldersNBT = ListTag()
+        for (folder in folders) {
+            foldersNBT.add(folder.toNBT())
+        }
+        nbt.put("folders", foldersNBT)
+
+        val filesNBT = ListTag()
+        for (file in files) {
+            filesNBT.add(file.toNBT())
+        }
+        nbt.put("files", filesNBT)
+
+        return nbt
     }
 
     private fun splitAtExtension(name: String): Pair<String, String> {
@@ -56,8 +80,39 @@ class Folder private constructor(var name: String, private val parent: Folder? =
             val root = Folder("C")
             val document = Document("Test Document", "RedstoneParadox")
             document.addPage("This document exists for the sake of testing out the file system.")
-            root.files.add(Document.DocumentFile(document.title, document))
+            root.files.add(Document.DocumentFile(document))
             return root
+        }
+
+        fun fromNBT(nbt: CompoundTag, parent: Folder? = null): Folder {
+            val nameNBT = nbt["name"]
+            val foldersNBT = nbt["folders"]
+            val filesNBT = nbt["files"]
+
+            if (nameNBT is StringTag && foldersNBT is ListTag && filesNBT is ListTag) {
+                val folder = Folder(nameNBT.asString(), parent)
+
+                for (folderNBT in foldersNBT) {
+                    if (folderNBT is CompoundTag) {
+                        folder.folders.add(fromNBT(folderNBT, folder))
+                    }
+                }
+
+                for (fileNBT in filesNBT) {
+                    if (fileNBT is CompoundTag) {
+                        val extensionNBT = fileNBT["extension"]
+                        val dataNBT = fileNBT["data"]
+
+                        if (extensionNBT is StringTag && dataNBT is CompoundTag) {
+                            File.fromNBT(extensionNBT.asString(), dataNBT)
+                        }
+                    }
+                }
+
+                return folder
+            }
+
+            throw Exception()
         }
     }
 }
