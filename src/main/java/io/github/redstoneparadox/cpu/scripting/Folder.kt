@@ -7,6 +7,17 @@ import net.minecraft.nbt.StringTag
 class Folder private constructor(var name: String, private val parent: Folder? = null) {
     private val folders: MutableList<Folder> = mutableListOf()
     private val files: MutableList<File<*>> = mutableListOf()
+    private var dirty = false
+
+    internal fun isDirty(): Boolean {
+        return dirty || folders.any { it.isDirty() } || files.any { it.dirty }
+    }
+
+    internal fun markClean() {
+        dirty = false
+        folders.forEach { it.markClean() }
+        files.forEach { dirty = false }
+    }
 
     fun hasParent(): Boolean = parent != null
 
@@ -15,6 +26,7 @@ class Folder private constructor(var name: String, private val parent: Folder? =
     fun openSubfolder(name: String): Folder {
         var folder = folders.firstOrNull { it.name == name }
         if (folder == null) {
+            dirty = true
             folder = Folder(name, this)
             folders.add(folder)
         }
@@ -28,8 +40,10 @@ class Folder private constructor(var name: String, private val parent: Folder? =
     fun getFile(name: String): File<*> {
         var file = files.firstOrNull { "${it.name}.${it.extension}" == name }
         if (file == null) {
+            dirty = true
             val split = splitAtExtension(name)
             file = File.blank(split.first, split.second)
+            files.add(file)
         }
         return file
     }
@@ -104,7 +118,7 @@ class Folder private constructor(var name: String, private val parent: Folder? =
                         val dataNBT = fileNBT["data"]
 
                         if (extensionNBT is StringTag && dataNBT is CompoundTag) {
-                            File.fromNBT(extensionNBT.asString(), dataNBT)
+                            folder.files.add(File.fromNBT(extensionNBT.asString(), dataNBT))
                         }
                     }
                 }

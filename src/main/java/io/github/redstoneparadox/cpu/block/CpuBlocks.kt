@@ -10,6 +10,7 @@ object CpuBlocks {
     val MODEM: Block = ModemBlock()
     val PRINTER: Block = PrinterBlock()
     val REDSTONE_ADAPTER: Block = RedstoneAdapterBlock()
+    val DISK_DRIVE: Block = DiskDriveBlock()
 
     fun register() {
         Registry.register(Registry.BLOCK, "cpu:computer", COMPUTER)
@@ -17,6 +18,7 @@ object CpuBlocks {
         Registry.register(Registry.BLOCK, "cpu:modem", MODEM)
         register("cpu:printer", PRINTER)
         register("cpu:redstone_adapter", REDSTONE_ADAPTER)
+        register("cpu:disk_drive", DISK_DRIVE)
     }
 
     fun register(id: String, block: Block) {

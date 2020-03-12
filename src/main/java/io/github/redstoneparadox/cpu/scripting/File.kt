@@ -2,15 +2,16 @@ package io.github.redstoneparadox.cpu.scripting
 
 import net.minecraft.nbt.CompoundTag
 
-interface File<T> {
-    var name: String
-    val extension: String
+abstract class File<T> {
+    abstract var name: String
+    abstract val extension: String
+    internal var dirty: Boolean = false
 
-    fun open(): T
+    abstract fun open(): T
 
-    fun save(t: T)
+    abstract fun save(t: T)
 
-    fun toNBT(): CompoundTag
+    internal abstract fun toNBT(): CompoundTag
 
     companion object {
         private val SUPPLIERS: MutableMap<String, (String) -> File<*>> = mutableMapOf()

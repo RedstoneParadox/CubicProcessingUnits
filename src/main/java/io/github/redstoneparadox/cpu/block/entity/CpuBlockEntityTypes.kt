@@ -12,6 +12,7 @@ object CpuBlockEntityTypes {
     val MODEM: BlockEntityType<ModemBlockEntity> = BlockEntityType.Builder.create(Supplier { ModemBlockEntity() }, CpuBlocks.MODEM).build(null)
     val PRINTER: BlockEntityType<PrinterBlockEntity> = BlockEntityType.Builder.create(Supplier { PrinterBlockEntity() }, CpuBlocks.PRINTER).build(null)
     val REDSTONE_ADAPTER: BlockEntityType<RedstoneAdapterBlockEntity> = BlockEntityType.Builder.create(Supplier { RedstoneAdapterBlockEntity() }, CpuBlocks.REDSTONE_ADAPTER).build(null)
+    val DISK_DRIVE: BlockEntityType<DiskDriveBlockEntity> = BlockEntityType.Builder.create(Supplier { DiskDriveBlockEntity() }, CpuBlocks.DISK_DRIVE).build(null)
 
     fun register() {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, "cpu:computer", COMPUTER)
@@ -19,6 +20,7 @@ object CpuBlockEntityTypes {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, "cpu:modem", MODEM)
         register("cpu:printer", PRINTER)
         register("cpu:redstone_adapter", REDSTONE_ADAPTER)
+        register("cpu:disk_drive", DISK_DRIVE)
     }
 
     fun register(id: String, type: BlockEntityType<*>) {

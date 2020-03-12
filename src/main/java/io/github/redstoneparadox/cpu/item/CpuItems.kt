@@ -13,8 +13,11 @@ object CpuItems {
     val MODEM = blockItem(CpuBlocks.MODEM)
     val PRINTER = blockItem(CpuBlocks.PRINTER)
     val REDSTONE_APADTER = blockItem(CpuBlocks.REDSTONE_ADAPTER)
+    val DISK_DRIVE = blockItem(CpuBlocks.DISK_DRIVE)
 
     val PRINTED_DOCUMENT = WrittenBookItem(Item.Settings().group(ItemGroup.MISC).maxCount(16))
+
+    val BLUE_FLOPPY_DISK = FloppyDiskItem()
 
     fun register() {
         Registry.register(Registry.ITEM, "cpu:computer", COMPUTER)
@@ -22,8 +25,11 @@ object CpuItems {
         Registry.register(Registry.ITEM, "cpu:modem", MODEM)
         register("cpu:printer", PRINTER)
         register("cpu:redstone_adapter", REDSTONE_APADTER)
+        register("cpu:disk_drive", DISK_DRIVE)
 
         register("cpu:printed_document", PRINTED_DOCUMENT)
+
+        register("cpu:blue_floppy_disk", BLUE_FLOPPY_DISK)
     }
 
     private fun register(id: String, item: Item) {

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "cpu:block/disk_drive" },
+    "facing=south": { "model": "cpu:block/disk_drive", "y": 180 },
+    "facing=west":  { "model": "cpu:block/disk_drive", "y": 270 },
+    "facing=east":  { "model": "cpu:block/disk_drive", "y": 90 }
+  }
+}

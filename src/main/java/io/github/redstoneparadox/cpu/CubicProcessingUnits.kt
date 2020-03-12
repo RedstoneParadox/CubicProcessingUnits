@@ -38,6 +38,8 @@ fun init() {
             it.append(CpuItems.MODEM)
             it.append(CpuItems.PRINTER)
             it.append(CpuItems.REDSTONE_APADTER)
+            it.append(CpuItems.DISK_DRIVE)
+            it.append(CpuItems.BLUE_FLOPPY_DISK)
         }
         .build()
 

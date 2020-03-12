@@ -66,7 +66,7 @@ class Document(var title: String, var author: String): Cloneable<Document> {
         }
     }
 
-    class DocumentFile(private var document: Document): File<Document> {
+    class DocumentFile(private var document: Document): File<Document>() {
         override var name: String
             get() = document.title
             set(value) { document.title = value }
@@ -79,6 +79,7 @@ class Document(var title: String, var author: String): Cloneable<Document> {
         override fun save(t: Document) {
             this.document = t
             name = document.title
+            dirty = true
         }
 
         override fun toNBT(): CompoundTag {

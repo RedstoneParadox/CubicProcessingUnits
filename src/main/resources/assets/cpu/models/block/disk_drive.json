@@ -1,0 +1,9 @@
+{
+  "parent": "block/orientable_with_bottom",
+  "textures": {
+    "top": "cpu:block/peripheral_top",
+    "bottom": "cpu:block/peripheral_bottom",
+    "front": "cpu:block/disk_drive_front",
+    "side": "cpu:block/peripheral_side"
+  }
+}
