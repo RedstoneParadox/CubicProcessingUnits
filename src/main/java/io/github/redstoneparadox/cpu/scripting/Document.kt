@@ -1,7 +1,7 @@
 package io.github.redstoneparadox.cpu.scripting
 
-import net.minecraft.nbt.CompoundTag
 import io.github.redstoneparadox.cpu.api.Cloneable
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.text.LiteralText

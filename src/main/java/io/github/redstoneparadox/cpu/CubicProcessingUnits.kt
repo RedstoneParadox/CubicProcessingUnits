@@ -1,8 +1,5 @@
 package io.github.redstoneparadox.cpu
 
-import net.fabricmc.fabric.api.container.ContainerFactory
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry
-import net.minecraft.util.Identifier
 import io.github.redstoneparadox.cpu.block.CpuBlocks
 import io.github.redstoneparadox.cpu.block.entity.CpuBlockEntityTypes
 import io.github.redstoneparadox.cpu.item.CpuItems
@@ -12,8 +9,11 @@ import io.github.redstoneparadox.cpu.networking.Packets
 import io.github.redstoneparadox.cpu.scripting.Document
 import io.github.redstoneparadox.cpu.scripting.File
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.container.ContainerFactory
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Identifier
 
 @Suppress("unused")
 fun init() {

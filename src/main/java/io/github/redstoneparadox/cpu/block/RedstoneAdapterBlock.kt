@@ -1,6 +1,5 @@
 package io.github.redstoneparadox.cpu.block
 
-import io.github.redstoneparadox.cpu.block.entity.ModemBlockEntity
 import io.github.redstoneparadox.cpu.block.entity.RedstoneAdapterBlockEntity
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.minecraft.block.*

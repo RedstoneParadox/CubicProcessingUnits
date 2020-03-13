@@ -1,12 +1,9 @@
 package io.github.redstoneparadox.cpu.scripting
 
-import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import io.github.redstoneparadox.cpu.api.Cloneable
 import io.github.redstoneparadox.cpu.util.LimitedQueue
-import kotlinx.coroutines.runBlocking
+import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import java.util.*
-import kotlin.collections.HashMap
-
 import kotlin.concurrent.schedule
 
 class ComputerNetwork {

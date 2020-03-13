@@ -1,8 +1,8 @@
 package io.github.redstoneparadox.cpu.block.entity
 
+import io.github.redstoneparadox.cpu.block.CpuBlocks
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.registry.Registry
-import io.github.redstoneparadox.cpu.block.CpuBlocks
 import java.util.function.Supplier
 
 object CpuBlockEntityTypes {

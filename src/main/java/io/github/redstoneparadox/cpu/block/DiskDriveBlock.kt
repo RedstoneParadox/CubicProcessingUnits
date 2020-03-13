@@ -1,11 +1,8 @@
 package io.github.redstoneparadox.cpu.block
 
 import io.github.redstoneparadox.cpu.block.entity.DiskDriveBlockEntity
-import io.github.redstoneparadox.cpu.block.entity.PrinterBlockEntity
-import io.github.redstoneparadox.cpu.id
 import io.github.redstoneparadox.cpu.item.FloppyDiskItem
 import net.fabricmc.fabric.api.block.FabricBlockSettings
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity

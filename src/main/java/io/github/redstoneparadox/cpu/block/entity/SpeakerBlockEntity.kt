@@ -5,11 +5,7 @@ import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
 import io.github.redstoneparadox.cpu.id
 import io.github.redstoneparadox.cpu.networking.Packets
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvent
-import net.minecraft.sound.SoundEvents
 import org.jetbrains.annotations.NotNull
 
 class SpeakerBlockEntity : PeripheralBlockEntity(CpuBlockEntityTypes.SPEAKER) {

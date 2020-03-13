@@ -1,20 +1,20 @@
 package io.github.redstoneparadox.cpu.block
 
+import io.github.redstoneparadox.cpu.block.entity.ComputerBlockEntity
+import io.github.redstoneparadox.cpu.id
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
+import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ItemPlacementContext
+import net.minecraft.state.StateManager
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
-import io.github.redstoneparadox.cpu.block.entity.ComputerBlockEntity
-import io.github.redstoneparadox.cpu.id
-import net.minecraft.block.*
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.state.StateManager
 
 class ComputerBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), BlockEntityProvider {
     override fun createBlockEntity(view: BlockView): BlockEntity {

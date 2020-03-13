@@ -2,11 +2,13 @@ package io.github.redstoneparadox.cpu.block
 
 import io.github.redstoneparadox.cpu.block.entity.SpeakerBlockEntity
 import net.fabricmc.fabric.api.block.FabricBlockSettings
-import net.minecraft.block.*
+import net.minecraft.block.BlockRenderType
+import net.minecraft.block.BlockState
+import net.minecraft.block.BlockWithEntity
+import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
-import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
 class SpeakerBlock: BlockWithEntity(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()) {

@@ -7,12 +7,10 @@ import io.github.redstoneparadox.cpu.misc.ComputerContainer
 import io.github.redstoneparadox.cpu.misc.PrinterContainer
 import io.github.redstoneparadox.oaktree.client.gui.ScreenBuilder
 import io.github.redstoneparadox.oaktree.client.gui.control.*
-import io.github.redstoneparadox.oaktree.client.gui.style.ColorStyleBox
 import io.github.redstoneparadox.oaktree.client.gui.style.StyleBox
 import io.github.redstoneparadox.oaktree.client.gui.style.TextureStyleBox
 import io.github.redstoneparadox.oaktree.client.gui.style.Theme
 import io.github.redstoneparadox.oaktree.client.gui.util.ControlAnchor
-import io.github.redstoneparadox.oaktree.client.gui.util.RGBAColor
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 
 @Suppress("unused")

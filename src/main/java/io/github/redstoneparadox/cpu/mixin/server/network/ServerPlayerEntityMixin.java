@@ -5,7 +5,6 @@ import io.github.redstoneparadox.cpu.item.CpuItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.WrittenBookItem;
 import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;

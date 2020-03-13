@@ -7,7 +7,6 @@ import io.github.redstoneparadox.cpu.item.FloppyDiskItem
 import io.github.redstoneparadox.cpu.scripting.Folder
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.ActionResult
 import net.minecraft.util.Tickable
 import org.jetbrains.annotations.NotNull
 

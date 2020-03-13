@@ -1,6 +1,5 @@
 package io.github.redstoneparadox.cpu.block.entity
 
-import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
 import io.github.redstoneparadox.cpu.computer.Computer
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
