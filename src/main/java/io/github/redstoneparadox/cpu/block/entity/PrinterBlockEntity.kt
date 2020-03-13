@@ -45,6 +45,10 @@ class PrinterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.PRINTER), Si
         return "printer"
     }
 
+    override fun isConnected(): Boolean {
+        return handle != null
+    }
+
     override fun tick() {
         val task = currentTask
         if (task != null) {

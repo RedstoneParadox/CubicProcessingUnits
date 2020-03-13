@@ -19,12 +19,18 @@ class RedstoneAdapterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.REDS
         return "redstone adapter"
     }
 
+    override fun isConnected(): Boolean {
+        return handle != null
+    }
+
     fun setEmitting(value: Boolean) {
         val world = world
         if (world != null) {
             val state = world.getBlockState(pos)
             world.setBlockState(pos, state.with(RedstoneAdapterBlock.EMITTING, value), 2)
             world.updateNeighbors(pos, CpuBlocks.REDSTONE_ADAPTER)
+            handle?.disconnect()
+            handle = null
         }
     }
 
@@ -34,6 +40,8 @@ class RedstoneAdapterBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.REDS
             val state = world.getBlockState(pos)
             world.setBlockState(pos, state.with(RedstoneAdapterBlock.POWER, value), 2)
             world.updateNeighbors(pos, CpuBlocks.REDSTONE_ADAPTER)
+            handle?.disconnect()
+            handle = null
         }
     }
 

@@ -32,12 +32,20 @@ class Computer(private val world: ServerWorld, var cores: Int, private val posSu
 
     private var checked: Boolean = false
 
-    // TODO: Rework peripheral system to make this less hacky
-    fun connectToPeripherals() {
+    private fun updateConnections() {
+        val keys = mutableListOf<String>()
+        for (entry in handles) {
+            if (entry.value.isClosed) {
+                peripherals.remove(entry.value)?.disconnect()
+                keys.add(entry.key)
+            }
+        }
+        keys.forEach { handles.remove(it) }
+
         for (direction in Direction.values()) {
             val neighborPos = posSupplier().offset(direction)
             val neighborBe = world.getBlockEntity(neighborPos)
-            if (neighborBe is PeripheralBlockEntity) {
+            if (neighborBe is PeripheralBlockEntity && !neighborBe.isConnected) {
                 val handle = PeripheralHandle(this)
                 val peripheral = neighborBe.getPeripheral(handle)
                 connect(handle, peripheral, neighborBe.defaultName)
@@ -47,7 +55,6 @@ class Computer(private val world: ServerWorld, var cores: Int, private val posSu
 
     @Synchronized
     fun run(script: String) {
-
         var job: Job? = null
 
         @Synchronized
@@ -66,7 +73,7 @@ class Computer(private val world: ServerWorld, var cores: Int, private val posSu
         }
     }
 
-    fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>, name: String) {
+    private fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>, name: String) {
         peripherals[handle] = peripheral
         var trueName = name
         var count = 1
@@ -83,6 +90,7 @@ class Computer(private val world: ServerWorld, var cores: Int, private val posSu
         for (entry in handles) {
             if (entry.value == handle) {
                 key = entry.key
+                entry.value.disconnect()
                 break
             }
         }
@@ -90,6 +98,7 @@ class Computer(private val world: ServerWorld, var cores: Int, private val posSu
     }
 
     fun tick() {
+        updateConnections()
         runningJobs.removeIf { it.isCompleted || it.isCancelled }
         while (runningJobs.size < cores) {
             if (jobQueue.isEmpty()) break
@@ -116,6 +125,10 @@ class Computer(private val world: ServerWorld, var cores: Int, private val posSu
         jobQueue.clear()
         runningJobs.forEach { it.cancel() }
         runningJobs.clear()
+        peripherals.values.forEach { it.disconnect() }
+        handles.values.forEach { it.disconnect() }
+        peripherals.clear()
+        handles.clear()
     }
 
     private fun createNewEngine(): ScriptEngine {

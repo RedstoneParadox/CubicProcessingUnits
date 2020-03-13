@@ -1,7 +1,5 @@
 package io.github.redstoneparadox.cpu.block
 
-import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
-import io.github.redstoneparadox.cpu.api.PeripheralHandle
 import net.fabricmc.fabric.api.block.FabricBlockSettings
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.entity.BlockEntity
@@ -21,10 +19,6 @@ import net.minecraft.state.StateManager
 class ComputerBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), BlockEntityProvider {
     override fun createBlockEntity(view: BlockView): BlockEntity {
         return ComputerBlockEntity()
-    }
-
-    override fun neighborUpdate(state: BlockState, world: World, pos: BlockPos, block: Block, neighborPos: BlockPos, moved: Boolean) {
-        connectPeripheral(world, pos, neighborPos)
     }
 
     override fun onBlockRemoved(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
@@ -50,22 +44,5 @@ class ComputerBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_
 
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState {
         return defaultState.with(FACING, ctx.playerFacing.opposite)
-    }
-
-    companion object {
-        internal fun connectPeripheral(world: World, pos: BlockPos, neighborPos: BlockPos) {
-            if (!world.isClient) {
-                val be = world.getBlockEntity(pos)
-                val neighborBe = world.getBlockEntity(neighborPos)
-                if (be is ComputerBlockEntity && neighborBe is PeripheralBlockEntity) {
-                    val computer = be.getComputer()
-                    if (computer != null) {
-                        val handle = PeripheralHandle(computer)
-                        val peripheral = neighborBe.getPeripheral(handle)
-                        be.connect(handle, peripheral, neighborBe.defaultName)
-                    }
-                }
-            }
-        }
     }
 }

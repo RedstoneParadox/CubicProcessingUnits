@@ -12,4 +12,6 @@ public abstract class PeripheralBlockEntity extends BlockEntity {
     public abstract Peripheral<?> getPeripheral(@NotNull PeripheralHandle handle);
 
     public abstract String getDefaultName();
+
+    public abstract boolean isConnected();
 }

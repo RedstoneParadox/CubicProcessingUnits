@@ -25,6 +25,10 @@ class SpeakerBlockEntity : PeripheralBlockEntity(CpuBlockEntityTypes.SPEAKER) {
         return "speaker"
     }
 
+    override fun isConnected(): Boolean {
+        return handle != null
+    }
+
     private fun playSound(id: String, pitch: Float) {
         (world as? ServerWorld)?.let { Packets.soundPacket(it, pos, id.id(), volume, pitch, true) }
     }

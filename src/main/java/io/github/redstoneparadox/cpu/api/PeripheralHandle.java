@@ -12,11 +12,15 @@ public class PeripheralHandle {
         this.computer = computer;
     }
 
-    public void disconnect() {
+    public final void disconnect() {
         if (!closed && computer != null) {
             closed = true;
             computer.disconnect(this);
             computer = null;
         }
+    }
+
+    public final boolean isClosed() {
+        return closed;
     }
 }

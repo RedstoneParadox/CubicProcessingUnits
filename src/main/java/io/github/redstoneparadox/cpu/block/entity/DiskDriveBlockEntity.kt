@@ -25,6 +25,10 @@ class DiskDriveBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.DISK_DRIVE
         return "disk drive"
     }
 
+    override fun isConnected(): Boolean {
+        return handle != null
+    }
+
     fun isEmpty(): Boolean {
         return disk.isEmpty
     }

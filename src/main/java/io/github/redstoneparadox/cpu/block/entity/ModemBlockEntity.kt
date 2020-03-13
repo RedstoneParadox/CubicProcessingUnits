@@ -21,6 +21,10 @@ class ModemBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.MODEM) {
         return "modem"
     }
 
+    override fun isConnected(): Boolean {
+        return handle != null
+    }
+
     fun open(id: Int) {
         if (world != null && !world!!.isClient) {
             val network = (world as ComputerNetworkAccessor).network

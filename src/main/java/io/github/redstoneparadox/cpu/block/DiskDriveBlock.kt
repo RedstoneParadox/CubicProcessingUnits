@@ -39,11 +39,13 @@ class DiskDriveBlock:  HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRO
             if (stack.isEmpty && !be.isEmpty()) {
                 player.setStackInHand(hand, be.remove())
                 be.handle?.disconnect()
+                be.handle = null
                 world.setBlockState(pos, state.with(HAS_DISK, false))
                 return ActionResult.SUCCESS
             }
             else if (stack.item is FloppyDiskItem && be.insert(stack)) {
                 be.handle?.disconnect()
+                be.handle = null
                 world.setBlockState(pos, state.with(HAS_DISK, true))
                 return ActionResult.SUCCESS
             }
