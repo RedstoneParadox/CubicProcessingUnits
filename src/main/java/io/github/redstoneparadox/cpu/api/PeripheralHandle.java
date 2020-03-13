@@ -1,14 +1,14 @@
 package io.github.redstoneparadox.cpu.api;
 
-import io.github.redstoneparadox.cpu.block.entity.ComputerBlockEntity;
+import io.github.redstoneparadox.cpu.computer.Computer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PeripheralHandle {
     private boolean closed = false;
-    private @Nullable ComputerBlockEntity computer;
+    private @Nullable Computer computer;
 
-    public PeripheralHandle(@NotNull ComputerBlockEntity computer) {
+    public PeripheralHandle(@NotNull Computer computer) {
         this.computer = computer;
     }
 

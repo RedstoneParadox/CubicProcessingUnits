@@ -58,9 +58,12 @@ class ComputerBlock: HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRON_
                 val be = world.getBlockEntity(pos)
                 val neighborBe = world.getBlockEntity(neighborPos)
                 if (be is ComputerBlockEntity && neighborBe is PeripheralBlockEntity) {
-                    val handle = PeripheralHandle(be)
-                    val peripheral = neighborBe.getPeripheral(handle)
-                    be.connect(handle, peripheral, neighborBe.defaultName)
+                    val computer = be.getComputer()
+                    if (computer != null) {
+                        val handle = PeripheralHandle(computer)
+                        val peripheral = neighborBe.getPeripheral(handle)
+                        be.connect(handle, peripheral, neighborBe.defaultName)
+                    }
                 }
             }
         }

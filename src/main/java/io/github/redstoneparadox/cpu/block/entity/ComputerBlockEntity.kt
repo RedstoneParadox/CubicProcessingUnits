@@ -3,128 +3,51 @@ package io.github.redstoneparadox.cpu.block.entity
 import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
+import io.github.redstoneparadox.cpu.computer.Computer
 import io.github.redstoneparadox.cpu.scripting.Folder
-import io.github.redstoneparadox.cpu.util.Action
 import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
-import java.util.*
+import java.io.*
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Supplier
 import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable, BlockEntityClientSerializable {
-    private var booted: Boolean = false
+    private var computer: Computer? = null
     private var script: String = ""
-    private var rootDirectory: Folder = Folder.createRootDirectory()
 
-    private val jobs: MutableList<Job> = mutableListOf()
-    private var cores: Int = 1
-
-    private val peripherals: MutableMap<PeripheralHandle, Peripheral<*>> = mutableMapOf()
-    private val handles: MutableMap<String, PeripheralHandle> = mutableMapOf()
-
-    private fun boot() {
-        val world = world
-        if (world != null && !world.isClient) {
-            for (direction in Direction.values()) {
-                val neighborPos = pos.offset(direction)
-                val neighborBe = world.getBlockEntity(neighborPos)
-                if (neighborBe is PeripheralBlockEntity) {
-                    val handle = PeripheralHandle(this)
-                    val peripheral = neighborBe.getPeripheral(handle)
-                    connect(handle, peripheral, neighborBe.defaultName)
-                }
-            }
-        }
-        booted = true
+    fun getComputer(): Computer? {
+        return computer
     }
 
     fun onRemove() {
-        for (job in jobs) job.cancel()
+        computer?.shutDown()
     }
 
     fun connect(handle: PeripheralHandle, peripheral: Peripheral<*>, name: String) {
-        peripherals[handle] = peripheral
-        var trueName = name
-        var count = 1
-        while (handles.containsKey(trueName)) {
-            count += 1
-            trueName = "$name$count"
-        }
-        handles[trueName] = handle
+        computer?.connect(handle, peripheral, name)
     }
 
     fun disconnect(handle: PeripheralHandle) {
-        if (peripherals.containsKey(handle)) peripherals.remove(handle)
-        var key = ""
-        for (entry in handles) {
-            if (entry.value == handle) {
-                key = entry.key
-                break
-            }
-        }
-        handles.remove(key)
+        computer?.disconnect(handle)
     }
 
     fun run() {
-        val world = world
-        if (world == null || world.isClient) return
-
-        val job = GlobalScope.launch {
-            val engine = createNewEngine()
-
-            try {
-                engine.eval(script)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        jobs.add(job)
-        return
-    }
-
-    @Synchronized
-    private fun createNewEngine(): ScriptEngine {
-        val initialized = SynchronizedBox(false)
-        val filter = { _: String -> !initialized.get()}
-        val engine = NashornScriptEngineFactory().getScriptEngine(filter)
-        val bindings = fillBindings(engine.createBindings())
-        initialized.set(true)
-
-        engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE)
-
-        return engine
-    }
-
-    @Synchronized
-    private fun fillBindings(bindings: Bindings): Bindings {
-        bindings["delay"] = Consumer { ms: Long -> Thread.sleep(ms) }
-        bindings["getPeripheral"] = Function { name: String -> getPeripheral(name)}
-        bindings["openFileSystem"] = Supplier { rootDirectory }
-
-        return bindings
-    }
-
-    @Synchronized
-    private fun getPeripheral(name: String): Peripheral<*>? {
-        val handle = handles[name]
-        if (handle != null) {
-            val peripheral = peripherals[handle]
-            if (peripheral != null) return peripheral
-            else handles.remove(name)
-        }
-        return null
+        computer?.run(script)
     }
 
     fun save(script: String) {
@@ -138,21 +61,28 @@ class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable,
 
     override fun fromTag(tag: CompoundTag) {
         if (tag.contains("script")) script = tag.getString("script")
-        if (tag.contains("filesystem")) rootDirectory = Folder.fromNBT(tag.getCompound("filesystem"))
+        computer?.fromNBT(tag)
         super.fromTag(tag)
     }
 
     override fun toTag(tag: CompoundTag): CompoundTag {
         tag.putString("script", script)
-        tag.put("filesystem", rootDirectory.toNBT())
+        computer?.toNBT(tag)
+        computer?.markClean()
         return super.toTag(tag)
     }
 
     override fun tick() {
-        if (!booted) boot()
-        val remaining = jobs.filter { it.isActive }
-        jobs.clear()
-        jobs.addAll(remaining)
+        val world = world
+        if (computer == null && world is ServerWorld) {
+            computer = Computer(world, 4) { pos }
+            computer?.connectToPeripherals()
+        }
+        computer?.tick()
+        if (computer?.isDirty() == true) {
+            computer?.markChecked()
+            markDirty()
+        }
     }
 
     override fun toClientTag(tag: CompoundTag): CompoundTag {
