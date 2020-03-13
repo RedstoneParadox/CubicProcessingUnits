@@ -5,13 +5,12 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
-import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 
 class FloppyDiskItem: Item(Settings()) {
+    val cachedTranslationKey: String = "item.cpu.floppy_disk"
 
-    override fun getName(): Text {
-        return TranslatableText("item.cpu.floppy_disk")
+    override fun getTranslationKey(): String {
+       return cachedTranslationKey
     }
 
     companion object {

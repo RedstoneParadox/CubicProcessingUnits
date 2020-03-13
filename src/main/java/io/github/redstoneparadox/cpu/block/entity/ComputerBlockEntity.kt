@@ -67,6 +67,14 @@ class ComputerBlockEntity : BlockEntity(CpuBlockEntityTypes.COMPUTER), Tickable,
 
     fun disconnect(handle: PeripheralHandle) {
         if (peripherals.containsKey(handle)) peripherals.remove(handle)
+        var key = ""
+        for (entry in handles) {
+            if (entry.value == handle) {
+                key = entry.key
+                break
+            }
+        }
+        handles.remove(key)
     }
 
     fun run() {

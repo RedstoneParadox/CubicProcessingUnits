@@ -4,8 +4,10 @@
   "block.cpu.printer": "Printer",
   "block.cpu.redstone_adapter": "Redstone Adapter",
   "block.cpu.speaker": "Speaker",
+  "block.cpu.disk_drive": "Disk Drive",
 
   "item.cpu.printed_document": "Printed Document",
+  "item.cpu.floppy_disk": "Floppy Disk",
 
   "itemGroup.cpu.cpu": "Cubic Processing Units"
 }

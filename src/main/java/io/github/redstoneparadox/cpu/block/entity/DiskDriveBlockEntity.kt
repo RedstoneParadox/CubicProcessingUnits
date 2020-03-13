@@ -29,12 +29,12 @@ class DiskDriveBlockEntity: PeripheralBlockEntity(CpuBlockEntityTypes.DISK_DRIVE
         return disk.isEmpty
     }
 
-    fun insert(disk: ItemStack): ActionResult {
-        if (!this.disk.isEmpty) return ActionResult.PASS
+    fun insert(disk: ItemStack): Boolean {
+        if (!this.disk.isEmpty) return false
         this.disk = disk.split(1)
         cachedFileSystem = if (this.disk.item is FloppyDiskItem) { FloppyDiskItem.createFileSystem(this.disk) } else { null }
         markDirty()
-        return ActionResult.SUCCESS
+        return true
     }
 
     fun remove(): ItemStack {

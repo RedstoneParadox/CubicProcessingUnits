@@ -1,8 +1,12 @@
 {
   "variants": {
-    "facing=north": { "model": "cpu:block/disk_drive" },
-    "facing=south": { "model": "cpu:block/disk_drive", "y": 180 },
-    "facing=west":  { "model": "cpu:block/disk_drive", "y": 270 },
-    "facing=east":  { "model": "cpu:block/disk_drive", "y": 90 }
+    "facing=north,has_disk=true": { "model": "cpu:block/disk_drive_with_disk" },
+    "facing=south,has_disk=true": { "model": "cpu:block/disk_drive_with_disk", "y": 180 },
+    "facing=west,has_disk=true":  { "model": "cpu:block/disk_drive_with_disk", "y": 270 },
+    "facing=east,has_disk=true":  { "model": "cpu:block/disk_drive_with_disk", "y": 90 },
+    "facing=north,has_disk=false": { "model": "cpu:block/disk_drive_no_disk" },
+    "facing=south,has_disk=false": { "model": "cpu:block/disk_drive_no_disk", "y": 180 },
+    "facing=west,has_disk=false":  { "model": "cpu:block/disk_drive_no_disk", "y": 270 },
+    "facing=east,has_disk=false":  { "model": "cpu:block/disk_drive_no_disk", "y": 90 }
   }
 }

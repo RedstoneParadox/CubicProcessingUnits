@@ -4,19 +4,25 @@ import net.minecraft.nbt.CompoundTag
 import io.github.redstoneparadox.cpu.api.Cloneable
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
+import net.minecraft.text.LiteralText
+import net.minecraft.text.Text
 
 class Document(var title: String, var author: String): Cloneable<Document> {
-    private val pages: MutableList<String> = mutableListOf()
+    private val pages: MutableList<Text> = mutableListOf()
 
     fun getPage(index: Int): String {
-        return pages[index]
+        return pages[index].asString()
     }
 
     fun setPage(index: Int, contents: String) {
-        pages[index] = contents
+        pages[index] = LiteralText(contents)
     }
 
     fun addPage(contents: String) {
+        pages.add(LiteralText(contents))
+    }
+
+    internal fun addPage(contents: Text) {
         pages.add(contents)
     }
 
@@ -36,7 +42,7 @@ class Document(var title: String, var author: String): Cloneable<Document> {
 
         val pagesTag = ListTag()
         for (page in pages) {
-            val pageTag = StringTag.of("{\"text\":\"$page\"}")
+            val pageTag = StringTag.of(Text.Serializer.toJson(page))
             pagesTag.add(pageTag)
         }
         nbt.put("pages", pagesTag)
@@ -55,7 +61,7 @@ class Document(var title: String, var author: String): Cloneable<Document> {
 
                 for (pageTag in pagesTag) {
                     if (pageTag is StringTag) {
-                        document.addPage(pageTag.asString())
+                        Text.Serializer.fromJson(pageTag.asString())?.let { document.addPage(it) }
                     }
                 }
 
@@ -63,6 +69,15 @@ class Document(var title: String, var author: String): Cloneable<Document> {
             }
 
             return Document("", "")
+        }
+
+        private fun getDesiredString(input: String): String {
+            if (!input.startsWith("{\"text\":\"")) return input
+
+            val actualText = input.removePrefix("{\"text\":\"")
+
+
+            return input
         }
     }
 

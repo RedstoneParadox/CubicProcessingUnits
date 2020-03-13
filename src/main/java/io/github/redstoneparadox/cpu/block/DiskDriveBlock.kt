@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
+import net.minecraft.state.property.BooleanProperty
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
@@ -37,10 +38,14 @@ class DiskDriveBlock:  HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRO
             val stack = player.getStackInHand(hand)
             if (stack.isEmpty && !be.isEmpty()) {
                 player.setStackInHand(hand, be.remove())
+                be.handle?.disconnect()
+                world.setBlockState(pos, state.with(HAS_DISK, false))
                 return ActionResult.SUCCESS
             }
-            else if (stack.item is FloppyDiskItem) {
-                return be.insert(stack)
+            else if (stack.item is FloppyDiskItem && be.insert(stack)) {
+                be.handle?.disconnect()
+                world.setBlockState(pos, state.with(HAS_DISK, true))
+                return ActionResult.SUCCESS
             }
         }
 
@@ -52,10 +57,14 @@ class DiskDriveBlock:  HorizontalFacingBlock(FabricBlockSettings.copy(Blocks.IRO
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        builder.add(FACING)
+        builder.add(FACING, HAS_DISK)
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState {
-        return defaultState.with(FACING, ctx.playerFacing.opposite)
+        return defaultState.with(FACING, ctx.playerFacing.opposite).with(HAS_DISK, false)
+    }
+
+    companion object {
+        val HAS_DISK: BooleanProperty = BooleanProperty.of("has_disk")
     }
 }
