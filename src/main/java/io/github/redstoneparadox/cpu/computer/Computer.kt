@@ -1,8 +1,13 @@
 package io.github.redstoneparadox.cpu.computer
 
+import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import io.github.redstoneparadox.cpu.api.Peripheral
 import io.github.redstoneparadox.cpu.api.PeripheralBlockEntity
 import io.github.redstoneparadox.cpu.api.PeripheralHandle
+import io.github.redstoneparadox.cpu.scripting.File
 import io.github.redstoneparadox.cpu.scripting.Folder
 import io.github.redstoneparadox.cpu.util.SynchronizedBox
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
@@ -26,11 +31,72 @@ class Computer(private val world: ServerWorld, var cores: Int, private val posSu
     private val jobQueue: Queue<Pair<Job, Continuation<ScriptEngine>>> = LinkedList<Pair<Job, Continuation<ScriptEngine>>>()
     private val runningJobs: MutableList<Job> = mutableListOf()
     private var rootDirectory: Folder = Folder.createRootDirectory()
+    private var currentFolder = rootDirectory
 
     private val peripherals: MutableMap<PeripheralHandle, Peripheral<*>> = mutableMapOf()
     private val handles: MutableMap<String, PeripheralHandle> = mutableMapOf()
 
     private var checked: Boolean = false
+
+    private val commandDispatcher = CommandDispatcher<Computer>()
+    private var openScript: File<*>? = null
+
+    init {
+        // Returns 2 to open the script.
+        val createFile = LiteralArgumentBuilder
+            .literal<Computer>("file")
+            .then(
+                RequiredArgumentBuilder
+                    .argument<Computer, String>("name", StringArgumentType.word())
+                    .executes {
+                        val file = currentFolder.getFile(it.getArgument("name", String::class.java))
+                        if (file.extension == "js") {
+                            openScript = file
+                            return@executes 2;
+                        }
+                        return@executes 1
+                    }
+                    .build()
+            )
+            .build()
+
+        val openFolder = LiteralArgumentBuilder
+            .literal<Computer>("folder")
+            .then(
+                RequiredArgumentBuilder
+                    .argument<Computer, String>("name", StringArgumentType.word())
+                    .executes {
+                        currentFolder = currentFolder.openSubfolder(it.getArgument("name", String::class.java));
+                        return@executes 1
+                    }
+                    .build()
+            )
+            .build()
+
+        val parentFolder = LiteralArgumentBuilder
+            .literal<Computer>("parent")
+            .executes {
+                if (currentFolder.hasParent()) {
+                    currentFolder = currentFolder.openParent()
+                    return@executes 1
+                }
+                return@executes 0
+            }
+            .build()
+
+        commandDispatcher.root.addChild(createFile)
+        commandDispatcher.root.addChild(openFolder)
+        commandDispatcher.root.addChild(parentFolder)
+    }
+
+    fun executeCommand(command: String): Int {
+        return try {
+            commandDispatcher.execute(command, this)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+    }
 
     private fun updateConnections() {
         val keys = mutableListOf<String>()
