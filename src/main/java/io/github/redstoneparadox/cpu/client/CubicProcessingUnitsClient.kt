@@ -87,7 +87,7 @@ fun computerControlTree(): Control<*> {
                         .onClick { gui, control ->
                             val container = gui.screenContainer
                             if (container.isPresent && container.get() is ComputerContainer) {
-                                textEdit.text = (container.get() as ComputerContainer).load()
+                                textEdit.text((container.get() as ComputerContainer).load())
                             }
                         }
                 )
