@@ -41,6 +41,13 @@ object ClientPackets {
         dispatch(CustomPayloadC2SPacket("cpu:save".id(), bytes))
     }
 
+    fun commandPacket(syncId: Int, command: String) {
+        val bytes = PacketByteBuf(Unpooled.buffer())
+        bytes.writeInt(syncId)
+        bytes.writeString(command)
+        dispatch(CustomPayloadC2SPacket("cpu:command".id(), bytes))
+    }
+
     fun runScriptPacket(syncId: Int) {
         val bytes = PacketByteBuf(Unpooled.buffer())
         bytes.writeInt(syncId)

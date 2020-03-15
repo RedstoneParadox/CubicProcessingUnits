@@ -11,6 +11,7 @@ import io.github.redstoneparadox.oaktree.client.gui.style.StyleBox
 import io.github.redstoneparadox.oaktree.client.gui.style.TextureStyleBox
 import io.github.redstoneparadox.oaktree.client.gui.style.Theme
 import io.github.redstoneparadox.oaktree.client.gui.util.ControlAnchor
+import io.github.redstoneparadox.oaktree.client.gui.util.GuiFunction
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 
 @Suppress("unused")
@@ -44,19 +45,14 @@ fun init() {
 }
 
 fun computerControlTree(): Control<*> {
-    val textEdit = TextEditControl()
-        .size(330f, 210f)
-        .anchor(ControlAnchor.CENTER)
-        .maxLines(23).shadow(true)
-        .id("text_edit")
     return SplitPanelControl()
-        .size(350f, 250f)
+        .size(400f, 250f)
         .splitSize(230f)
         .anchor(ControlAnchor.CENTER)
         .verticalSplit(true)
         .id("base")
         .child(
-            textEdit
+            computerScreenTree()
         )
         .child(
             GridPanelControl()
@@ -70,12 +66,6 @@ fun computerControlTree(): Control<*> {
                         .defaultStyle(computerButtonStyle(0, 1))
                         .heldStyle(computerButtonStyle(0, 0))
                         .hoverStyle(computerButtonStyle(0, 2))
-                        .onClick { gui, control ->
-                            val container = gui.screenContainer
-                            if (container.isPresent && container.get() is ComputerContainer) {
-                                (container.get() as ComputerContainer).save(textEdit.text)
-                            }
-                        }
                 )
                 .child(
                     ButtonControl()
@@ -84,12 +74,6 @@ fun computerControlTree(): Control<*> {
                         .defaultStyle(computerButtonStyle(1, 1))
                         .heldStyle(computerButtonStyle(1, 0))
                         .hoverStyle(computerButtonStyle(1, 2))
-                        .onClick { gui, control ->
-                            val container = gui.screenContainer
-                            if (container.isPresent && container.get() is ComputerContainer) {
-                                textEdit.text((container.get() as ComputerContainer).load())
-                            }
-                        }
                 )
                 .child(
                     ButtonControl()
@@ -98,14 +82,82 @@ fun computerControlTree(): Control<*> {
                         .defaultStyle(computerButtonStyle(2, 1))
                         .heldStyle(computerButtonStyle(2, 0))
                         .hoverStyle(computerButtonStyle(2, 2))
-                        .onClick { gui, control ->
-                            val container = gui.screenContainer
-                            if (container.isPresent && container.get() is ComputerContainer) {
-                                (container.get() as ComputerContainer).run()
-                            }
-                        }
                 )
         )
+}
+
+fun computerScreenTree(): Control<*> {
+    val pageNode = PagePanelControl()
+        .size(380f, 210f)
+
+    val editorTree = SplitPanelControl()
+        .size(380f, 210f)
+        .splitSize(360f)
+
+    val consoleTree = SplitPanelControl()
+        .size(380f, 210f)
+        .id("text_edit")
+        .verticalSplit(true)
+        .splitSize(210f - 14f)
+
+    val commandLine = TextEditControl()
+        .displayedLines(1)
+        .maxLines(1)
+        .size(380f, 14f)
+
+    commandLine.onEnter = GuiFunction { gui, control ->
+        commandLine.clear()
+    }
+
+    val commandOutput = ListPanelControl()
+        .size(380f, 210 - 12f)
+        .displayCount(14)
+
+    val textEdit = TextEditControl()
+        .size(360f, 210f)
+        .anchor(ControlAnchor.CENTER)
+        .maxLines(100)
+        .displayedLines(23)
+        .shadow(true)
+        .id("text_edit")
+    val saveButton = ButtonControl()
+        .size(20f, 18f)
+        .defaultStyle(editorButtonStyle(0, 0))
+        .hoverStyle(editorButtonStyle(0, 1))
+        .heldStyle(editorButtonStyle(0, 2))
+        .onClick { gui, control ->
+            val container = gui.screenContainer
+            if (container.isPresent && container.get() is ComputerContainer) {
+                (container.get() as ComputerContainer).save(textEdit.text)
+            }
+        }
+    val closeButton = ButtonControl()
+        .size(20f, 18f)
+        .defaultStyle(editorButtonStyle(0, 0))
+        .hoverStyle(editorButtonStyle(0, 1))
+        .heldStyle(editorButtonStyle(0, 2))
+        .onClick { gui, control ->
+            textEdit.clear()
+            editorTree.visible(false)
+            pageNode.previousPage()
+            consoleTree.visible(true)
+        }
+    val buttonGrid = GridPanelControl()
+        .size(20f, 18f * 2)
+        .rows(2)
+        .columns(1)
+        .child(saveButton)
+        .child(closeButton)
+
+    editorTree
+        .child(textEdit)
+        .child(buttonGrid)
+
+    pageNode
+        .child(Control())
+        .child(editorTree)
+
+    return pageNode
 }
 
 fun computerButtonStyle(left: Int, top: Int): StyleBox {
@@ -114,6 +166,14 @@ fun computerButtonStyle(left: Int, top: Int): StyleBox {
         .fileDimensions(256f, 256f)
         .textureSize(50, 10)
         .drawOrigin(left * 50, top * 10)
+}
+
+fun editorButtonStyle(left: Int, top: Int): StyleBox {
+    return TextureStyleBox("cpu:textures/gui/ui.png")
+        .scale(1f)
+        .fileDimensions(256f, 256f)
+        .textureSize(20, 18)
+        .drawOrigin(left * 20, top * 18 + 30)
 }
 
 fun printerControlTree(): Control<*> {
